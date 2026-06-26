@@ -1,0 +1,77 @@
+---
+title: Customize themes and fonts
+description: Switch the project theme, code highlight theme, and fonts to set the mood.
+---
+
+## Goal
+
+Change the overall look — palette, code colors, and typography — to match the
+tone of your video.
+
+## Set the project theme
+
+The project theme controls the background, palette, and default code theme. Set
+it in the manifest:
+
+```toml title="codescene.toml"
+theme = "dark_documentary"
+```
+
+Available project themes:
+
+- `dark_documentary` (default) — navy background, gold accents
+- `hacker_terminal` — green-on-black
+- `scientific` — clean, light, neutral
+- `blueprint` — blue technical drawing
+- `modern_minimal` — restrained and bright
+- `retro_computer` — amber CRT
+- `ancient_manuscript` — parchment and ink
+
+## Choose a code highlight theme
+
+`s.code()` accepts an optional theme argument to override the default just for
+that block:
+
+```rust
+// code(source, lang, [theme], x, y)
+let a = s.code(read("src/main.rs"), "rust", "base16-ocean.dark", 96, 160);
+```
+
+Built-in code themes include `base16-ocean.dark` (default),
+`base16-eighties.dark`, `base16-mocha.dark`, `Solarized (dark)`,
+`base16-ocean.light`, `Solarized (light)`, and `InspiredGitHub`.
+
+<Video src="editor_theme" caption="The same code under several highlight themes." />
+
+List everything available on your build:
+
+```bash
+cinecode themes
+```
+
+## Set fonts
+
+Declare fonts in the manifest (remember: bare keys before any `[table]`):
+
+```toml title="codescene.toml"
+fonts = ["assets/fonts/Inter.ttf", "assets/fonts/FiraCode.ttf"]
+```
+
+Then select a font per node:
+
+```rust
+s.text("Chapter One", 96, 64).font("Inter").font_size(56);
+s.code(read("src/main.rs"), "rust", 96, 160).font("Fira Code");
+```
+
+<Video src="font_set" caption="Swapping fonts changes the entire character of a scene." />
+
+<Callout type="info">
+  CineCode bundles JetBrains Mono, so code renders out of the box even with no
+  `fonts` entry.
+</Callout>
+
+## Reference
+
+The full palette of each theme and the code theme list are in
+[Themes reference](/docs/reference/themes).

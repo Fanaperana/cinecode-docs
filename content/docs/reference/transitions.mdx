@@ -1,0 +1,53 @@
+---
+title: Transitions
+description: Transition kinds between scenes — cut, crossfade, fade_color, wipe, and slide.
+---
+
+Transitions smooth the cut between scenes. Set a default in the
+[manifest](/docs/reference/project-manifest#transition), or call
+`s.transition(kind, frames, [r, g, b])` inside a scene.
+
+```toml title="codescene.toml"
+[transition]
+kind = "crossfade"
+frames = 18
+```
+
+```rust title="inside a scene"
+s.transition("fade_color", 24, 8, 10, 20); // dip through a dark navy
+```
+
+## Kinds
+
+| Kind | Aliases | Description |
+| --- | --- | --- |
+| `cut` | — | Instant change, no blend. |
+| `crossfade` | `dissolve`, `fade` | Blend the outgoing and incoming scenes. |
+| `fade_color` | `dip`, `fade_through` | Dip to a solid color, then up into the next scene. |
+| `wipe_left` | — | New scene wipes in from the right toward the left. |
+| `wipe_right` | — | Wipe in from the left toward the right. |
+| `wipe_up` | — | Wipe in from the bottom upward. |
+| `wipe_down` | — | Wipe in from the top downward. |
+| `slide_left` | `push_left` | New scene pushes the old one to the left. |
+| `slide_right` | `push_right` | Pushes to the right. |
+| `slide_up` | `push_up` | Pushes upward. |
+| `slide_down` | `push_down` | Pushes downward. |
+
+## Parameters
+
+| Parameter | Description |
+| --- | --- |
+| `kind` | One of the kinds above. |
+| `frames` | Duration of the transition. |
+| `r, g, b` | Color for `fade_color` (defaults to black). |
+
+## Choosing a transition
+
+- **`crossfade`** is the safe documentary default.
+- **`fade_color`** marks a chapter break — dip to the project background.
+- **`slide_*`** implies spatial continuation (e.g. moving along a pipeline).
+- **`wipe_*`** is bolder; use sparingly.
+
+<Callout type="info">
+  In the example project, all 17 scenes are joined with an 18-frame `crossfade`.
+</Callout>

@@ -1,0 +1,56 @@
+---
+title: Easing
+description: Easing equations and modes for .ease().
+---
+
+`.ease(EQUATION, MODE)` retargets the **previous** animation with an easing
+curve. You can also build a reusable curve with `ease(EQUATION, MODE)` and pass
+it around.
+
+```rust
+code.slide_up(0, 24).ease(CUBIC, EASE_OUT);
+
+let snappy = ease(BACK, EASE_OUT);
+title.fade_in(0, 20).ease(snappy);
+```
+
+## Equations
+
+| Equation | Feel |
+| --- | --- |
+| `LINEAR` | Constant speed (no easing). |
+| `SINE` | Gentle. |
+| `QUAD` | Mild acceleration. |
+| `CUBIC` | Standard, natural. |
+| `QUART` | Stronger. |
+| `QUINT` | Very strong. |
+| `EXPO` | Dramatic, exponential. |
+| `CIRC` | Circular arc. |
+| `BACK` | Overshoots slightly. |
+| `ELASTIC` | Springy oscillation. |
+| `BOUNCE` | Bounces at the end. |
+
+## Modes
+
+| Mode | Description |
+| --- | --- |
+| `EASE_IN` | Slow start, fast finish. |
+| `EASE_OUT` | Fast start, slow finish. |
+| `EASE_IN_OUT` | Slow at both ends. |
+| `EASE_OUT_IN` | Fast in the middle. |
+
+## Gallery
+
+<Video src="tweens" caption="Easing equations and modes compared." />
+
+## Recommended pairings
+
+| Use | Equation / Mode |
+| --- | --- |
+| Entrances | `CUBIC` / `EASE_OUT` |
+| Exits | `CUBIC` / `EASE_IN` |
+| Playful pop | `BACK` / `EASE_OUT` |
+| Bouncy arrival | `BOUNCE` / `EASE_OUT` |
+| Camera moves | `SINE` / `EASE_IN_OUT` |
+
+See also: [Use easing and tweens](/docs/how-to/use-easing-and-tweens).

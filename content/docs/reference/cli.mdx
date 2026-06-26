@@ -1,0 +1,82 @@
+---
+title: CLI
+description: Every cinecode subcommand and flag.
+---
+
+The `cinecode` binary has a small set of subcommands. Run `cinecode --help` or
+`cinecode <command> --help` for the built-in usage.
+
+## `cinecode new`
+
+Scaffold a new project.
+
+```bash
+cinecode new <name>
+```
+
+| Argument | Description |
+| --- | --- |
+| `<name>` | Directory to create, containing `codescene.toml`, `scenes/`, and `src/`. |
+
+## `cinecode render`
+
+Render a project to a video (or image sequence).
+
+```bash
+cinecode render <project> -o <output> [flags]
+```
+
+| Flag | Description |
+| --- | --- |
+| `<project>` | Path to the project folder (containing `codescene.toml`). |
+| `-o, --output <path>` | Output file (`.mp4`) or directory (with `--format png`). |
+| `-s, --scene <name\|index>` | Render only this scene. Index is **1-based**. |
+| `--from <name\|index>` | First scene of a range (inclusive). |
+| `--to <name\|index>` | Last scene of a range (inclusive). |
+| `--gpu` | Use the GPU backend (required for shaders/bloom). |
+| `--bloom <n>` | Bloom intensity for the GPU backend. |
+| `--crf <18–28>` | H.264 quality; lower is better/larger. |
+| `--preset <p>` | ffmpeg speed preset (`ultrafast` … `veryslow`). |
+| `--format png` | Export numbered PNG frames instead of a video. |
+| `-q, --quiet` | Minimal output. |
+| `-v, --verbose` | Detailed output. |
+
+<Callout type="warn">
+  Scene selection is **1-based**. `-s 1` is the first scene; `-s 0` errors.
+</Callout>
+
+### Examples
+
+```bash
+cinecode render my-video -o out.mp4
+cinecode render my-video -s intro -o intro.mp4
+cinecode render my-video -s 3 -o scene3.mp4
+cinecode render my-video --from intro --to graph -o part1.mp4
+cinecode render my-video -o final.mp4 --crf 18 --preset slow
+cinecode render my-video -o effects.mp4 --gpu --bloom 0.8
+cinecode render my-video --format png -o frames/
+```
+
+## `cinecode check`
+
+Parse the manifest and all scene scripts and report errors without rendering.
+
+```bash
+cinecode check <project>
+```
+
+## `cinecode themes`
+
+List available project and code highlight themes.
+
+```bash
+cinecode themes
+```
+
+## `cinecode languages`
+
+List the languages available for syntax highlighting.
+
+```bash
+cinecode languages
+```

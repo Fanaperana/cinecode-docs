@@ -1,0 +1,81 @@
+---
+title: Draw shapes and images
+description: Add panels, rectangles, circles, lines, paths, and images to compose a frame.
+---
+
+## Goal
+
+Build backgrounds, callout panels, and diagrams from primitive shapes and
+images.
+
+## Panels and rectangles
+
+A panel is a filled, rounded background — perfect behind code or text:
+
+```rust
+// panel(x, y, w, h, r, g, b)
+s.panel(80, 140, 560, 360, 18, 22, 34);
+
+// rect(x, y, w, h)
+let box = s.rect(700, 160, 420, 300);
+box.fill(20, 26, 40).stroke(80, 120, 200).stroke_width(2).radius(12);
+```
+
+## Basic shapes
+
+```rust
+s.square(700, 160, 120);
+s.circle(900, 360, 80);
+s.ellipse(900, 360, 120, 80);
+s.line(100, 100, 500, 400);
+s.polygon([[100,100],[200,80],[260,180]]);
+s.path("M 100 100 L 200 80 Q 260 120 300 200");
+```
+
+## Shape styling
+
+Shape nodes accept fill and stroke styling:
+
+```rust
+let c = s.circle(640, 360, 100);
+c.no_fill()                // outline only
+ .stroke(200, 160, 80)
+ .stroke_width(3)
+ .dashed()                 // or .dotted() / .solid()
+ .grow_in(0, 24);
+```
+
+## Images
+
+Drop in an image (optionally scaled):
+
+```rust
+// image(path, x, y, [w, h])
+s.image("assets/diagram.png", 700, 160, 420, 300).fade_in(0, 16);
+```
+
+## Compose a scene
+
+The example's shapes scene layers panels, primitives, and images together:
+
+<Video src="shapes" caption="Panels, shapes, and images composed into a frame." />
+
+```rust
+let s = scene("Shapes & Images", 180);
+
+s.panel(80, 120, 1120, 480, 16, 20, 30);
+s.text("Anatomy of a river", 96, 64).font_size(44).fade_in(0, 14);
+
+let basin = s.ellipse(400, 360, 220, 140);
+basin.no_fill().stroke(90, 140, 220).stroke_width(3).grow_in(20, 24);
+
+s.path("M 200 360 Q 400 200 640 360 T 1040 360")
+ .no_fill().stroke(120, 180, 255).stroke_width(4).appear(40, 20);
+
+s.image("assets/legend.png", 880, 200, 240, 160).fade_in(60, 16);
+```
+
+## Reference
+
+Every shape builder and style method is in [Scene API](/docs/reference/scene-api)
+and [Code & node animations](/docs/reference/code-animations).

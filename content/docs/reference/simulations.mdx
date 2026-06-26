@@ -1,0 +1,155 @@
+---
+title: Simulations
+description: Every built-in simulation — terrain, pathfind, particles, graph, life, and boids — with parameters and live output.
+---
+
+Simulations are deterministic algorithms rendered as scene nodes. Create one
+with `s.<sim>(...)`, configure it with a fluent chain, then drive it on the
+[timeline](#timeline-control) or [link it to code](/docs/how-to/bind-code-to-simulations).
+
+## Timeline control
+
+Every simulation node supports these timing methods:
+
+| Method | Description |
+| --- | --- |
+| `reveal(start, dur)` | Reveal the simulation building in. |
+| `run(start, dur)` | Advance the simulation over a window. |
+| `hold(value, start, dur)` | Hold at a fixed progress value. |
+| `loop(start, cycle, cycles)` | Loop a cycle a number of times. |
+
+## terrain / noise
+
+A procedural heightmap.
+
+```rust
+let t = s.terrain(680, 160);
+t.seed(7).frequency(3.0).octaves(4).cells(48, 32).mode("heightmap");
+t.reveal(10, 50);
+```
+
+| Method | Description |
+| --- | --- |
+| `seed(n)` | Random seed (determinism). |
+| `frequency(f)` | Noise frequency. |
+| `octaves(n)` | Octaves of detail. |
+| `cells(x, y)` | Grid resolution. |
+| `mode(m)` | `heightmap`, `heatmap`, or `grayscale`. |
+
+<Video src="terrain" caption="terrain — a seeded heightmap." />
+
+## pathfind
+
+A* search on a grid.
+
+```rust
+let grid = s.pathfind(700, 150);
+grid.seed(11).cells(24, 18).wall_density(0.28);
+grid.run(20, 90);
+```
+
+| Method | Description |
+| --- | --- |
+| `seed(n)` | Random seed. |
+| `cells(x, y)` | Grid resolution. |
+| `wall_density(d)` | Fraction of walls, `0`–`0.6`. |
+
+**Color legend:** start = green (top-left), goal = red (bottom-right),
+explored = blue, frontier = cyan, final path = gold.
+
+<Video src="pathfind" caption="pathfind — A* exploring toward the goal." />
+
+## particles
+
+Streams of particles between two points.
+
+```rust
+// particles(from_x, from_y, to_x, to_y)
+let p = s.particles(200, 360, 1080, 360);
+p.count(400).spread(40.0).speed(6.0);
+p.run(10, 120);
+```
+
+| Method | Description |
+| --- | --- |
+| `count(n)` | Number of particles. |
+| `spread(s)` | Emission spread. |
+| `speed(v)` | Particle speed. |
+
+<Video src="particles" caption="particles — routing packets across the frame." />
+
+## graph
+
+Graph traversal (BFS/DFS).
+
+```rust
+let g = s.graph(640, 200);
+g.seed(3).nodes(18).algorithm("bfs");
+g.run(20, 100);
+```
+
+| Method | Description |
+| --- | --- |
+| `seed(n)` | Random seed. |
+| `nodes(n)` | Number of nodes. |
+| `algorithm(a)` | `bfs` or `dfs`. |
+
+<Video src="graph" caption="graph — breadth-first traversal." />
+
+## life / automata
+
+Conway's Game of Life (and other rules).
+
+```rust
+let l = s.life(640, 160);
+l.seed(5).cells(64, 36).density(0.3).generations(60).rule("B3/S23");
+l.run(0, 120);
+```
+
+| Method | Description |
+| --- | --- |
+| `seed(n)` | Random seed. |
+| `cells(x, y)` | Grid resolution. |
+| `density(d)` | Initial alive fraction. |
+| `generations(n)` | Number of generations. |
+| `rule(s)` | Birth/survival rule, e.g. `"B3/S23"`. |
+
+<Video src="life" caption="life — Conway's Game of Life evolving." />
+
+## boids
+
+Flocking simulation.
+
+```rust
+let b = s.boids(640, 360);
+b.seed(9).count(120).steps(200).separation(1.4).alignment(1.0).cohesion(0.8);
+b.run(0, 160);
+```
+
+| Method | Description |
+| --- | --- |
+| `seed(n)` | Random seed. |
+| `count(n)` | Number of boids. |
+| `steps(n)` | Simulation steps. |
+| `separation(w)` | Separation weight. |
+| `alignment(w)` | Alignment weight. |
+| `cohesion(w)` | Cohesion weight. |
+
+<Video src="boids" caption="boids — emergent flocking." />
+
+## All six together
+
+<VideoGrid>
+  <Video src="terrain" caption="terrain" />
+  <Video src="pathfind" caption="pathfind" />
+  <Video src="particles" caption="particles" />
+  <Video src="graph" caption="graph" />
+  <Video src="life" caption="life" />
+  <Video src="boids" caption="boids" />
+</VideoGrid>
+
+<Callout type="info">
+  Every simulation is a pure function of its parameters and the frame number — so
+  the same `seed` always produces the same animation. See
+  [Determinism](/docs/explanation/determinism).
+</Callout>

@@ -1,0 +1,65 @@
+---
+title: Bind code to simulations
+description: Link a line of code to a running diagram with s.link() so they animate together.
+---
+
+## Goal
+
+Make a diagram respond to the code beside it — when a line is reached, its
+simulation comes alive.
+
+## The link primitive
+
+```rust
+s.link(code, line, sim, start, dur);
+```
+
+- `code` — a node from `s.code(...)`
+- `line` — the 1-based line that drives the simulation
+- `sim` — a simulation node (`s.terrain(...)`, `s.pathfind(...)`, …)
+- `start`, `dur` — when the linked animation plays, in frames
+
+## A worked example
+
+Show a pathfinding algorithm next to its code, and drive the search from the
+line that calls it:
+
+```rust
+let s = scene("A* Pathfinding", 220);
+
+let code = s.code(read("src/astar.rs"), "rust", 96, 160);
+code.font_size(30).fade_in(0, 12).typewriter(6, 80);
+
+let grid = s.pathfind(700, 150);
+grid.seed(11).cells(24, 18).wall_density(0.28);
+
+// When line 9 (the search call) is reached, run the search beside it
+s.link(code, 9, grid, 100, 90);
+```
+
+<Video src="pathfind" caption="A* search bound to the line of code that launches it." />
+
+## Works with every simulation
+
+The same pattern drives all six simulation types. Just create the simulation,
+configure it, and link the relevant line:
+
+<VideoGrid>
+  <Video src="terrain" caption="terrain — heightmaps & heatmaps" />
+  <Video src="particles" caption="particles — routing packets" />
+  <Video src="graph" caption="graph — BFS / DFS traversal" />
+  <Video src="life" caption="life — Conway's Game of Life" />
+</VideoGrid>
+
+## Tips
+
+- Link the **call site**, not the definition — the line a viewer reads as “this
+  is where it runs.”
+- Match `start`/`dur` to your narration so the diagram peaks as you explain it.
+- Use a [spotlight](/docs/how-to/highlight-and-focus-code) on the same line so
+  code and diagram are obviously connected.
+
+## Reference
+
+Per-simulation parameters and color legends are in
+[Simulations reference](/docs/reference/simulations).

@@ -1,0 +1,79 @@
+---
+title: Use easing and tweens
+description: Retarget any animation with an easing curve for natural, cinematic motion.
+---
+
+## Goal
+
+Replace robotic linear motion with curves that accelerate and decelerate
+naturally.
+
+## How easing works
+
+Most animations animate linearly by default. Chain `.ease(EQUATION, MODE)`
+immediately after an animation to **retarget the previous animation** with a
+curve:
+
+```rust
+code.slide_up(0, 30).ease(CUBIC, EASE_OUT);
+```
+
+## Equations and modes
+
+<TypeTable
+  type={{
+    "Equation": {
+      description: "The shape of the curve.",
+      type: "LINEAR | SINE | QUAD | CUBIC | QUART | QUINT | EXPO | CIRC | BACK | ELASTIC | BOUNCE",
+    },
+    "Mode": {
+      description: "Where the curve is applied.",
+      type: "EASE_IN | EASE_OUT | EASE_IN_OUT | EASE_OUT_IN",
+    },
+  }}
+/>
+
+- `EASE_IN` — slow start
+- `EASE_OUT` — slow stop
+- `EASE_IN_OUT` — slow at both ends
+- `EASE_OUT_IN` — fast in the middle
+
+## See the presets
+
+The example project demonstrates a gallery of easing curves side by side:
+
+<Video src="tweens" caption="A gallery of easing equations and modes." />
+
+## Store a curve and reuse it
+
+You can capture an easing into a variable and apply it repeatedly for a
+consistent feel:
+
+```rust
+let snappy = ease(BACK, EASE_OUT);
+
+title.slide_up(0, 24).ease(snappy);
+code.fade_in(6, 20).ease(snappy);
+```
+
+## Delay before an animation
+
+Offset an animation in time without changing its curve:
+
+```rust
+code.fade_in(0, 20).delay(15); // wait 15 frames, then fade in
+```
+
+## Recommended pairings
+
+| Motion | Try |
+| --- | --- |
+| Things entering | `CUBIC` / `EASE_OUT` |
+| Things leaving | `CUBIC` / `EASE_IN` |
+| Playful pop | `BACK` / `EASE_OUT` |
+| Bouncy arrival | `BOUNCE` / `EASE_OUT` |
+| Camera moves | `SINE` / `EASE_IN_OUT` |
+
+## Reference
+
+The full list of equations and modes is in [Easing reference](/docs/reference/easing).

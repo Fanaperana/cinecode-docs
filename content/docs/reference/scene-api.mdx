@@ -1,0 +1,119 @@
+---
+title: Scene API
+description: scene(), the s.* builders for text, code, shapes, images, focus helpers, links, and transitions.
+---
+
+This page lists the builders available on a scene. Animation, style, and focus
+methods that you chain onto the returned nodes are documented in
+[Code & node animations](/docs/reference/code-animations).
+
+## `scene(name, frames)`
+
+Declare a scene and its duration in frames.
+
+```rust
+let s = scene("Introduction", 180);
+```
+
+## Text
+
+```rust
+// text(content, x, y)
+let title = s.text("Hello, CineCode", 96, 64);
+```
+
+## Code
+
+```rust
+// code(source, lang, [theme], x, y)
+let a = s.code(read("src/main.rs"), "rust", 96, 160);
+let b = s.code(read("src/main.rs"), "rust", "Solarized (dark)", 96, 160);
+```
+
+- `source` — the code text (use `read("path")` to load a file)
+- `lang` — a language id (see [Languages](/docs/reference/languages))
+- `theme` — optional code highlight theme (see [Themes](/docs/reference/themes))
+- `x, y` — top-left position
+
+## Shapes
+
+```rust
+s.panel(x, y, w, h, r, g, b);
+s.rect(x, y, w, h);
+s.square(x, y, size);
+s.circle(x, y, radius);
+s.ellipse(x, y, rx, ry);
+s.line(x1, y1, x2, y2);
+s.polygon([[x, y], ...]);
+s.path("M ... L ...");
+```
+
+## Images
+
+```rust
+// image(path, x, y, [w, h])
+s.image("assets/diagram.png", 700, 160, 420, 300);
+```
+
+## Focus helpers
+
+These act on a code/text node:
+
+```rust
+// underline(node, line, start, dur)
+s.underline(code, 3, 100, 20);
+
+// surround(node, from_line, to_line, start, dur)
+s.surround(code, 1, 4, 100, 24);
+
+// point_at(node, line, from_x, from_y, start, dur)
+s.point_at(code, 5, 760, 320, 120, 18);
+```
+
+## Morph
+
+```rust
+// morph(old_node, new_node, style, start, dur)
+s.morph(a, b, "dissolve", 60, 40);
+```
+
+## Link code to a simulation
+
+```rust
+// link(node, line, sim, start, dur)
+s.link(code, 9, grid, 100, 90);
+```
+
+See [Bind code to simulations](/docs/how-to/bind-code-to-simulations).
+
+## Simulations
+
+```rust
+s.terrain(x, y);    s.noise(x, y);
+s.pathfind(x, y);
+s.particles(from_x, from_y, to_x, to_y);
+s.graph(x, y);
+s.life(x, y);       s.automata(x, y);
+s.boids(x, y);
+```
+
+Each returns a simulation node configured with a fluent chain — see
+[Simulations](/docs/reference/simulations).
+
+## Camera
+
+```rust
+let cam = s.camera();
+```
+
+See [Camera](/docs/reference/camera).
+
+## Transition
+
+```rust
+// transition(kind, frames, [r, g, b])
+s.transition("crossfade", 18);
+s.transition("fade_color", 24, 8, 10, 20);
+```
+
+See [Transitions](/docs/reference/transitions).

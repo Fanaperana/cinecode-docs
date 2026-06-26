@@ -1,0 +1,79 @@
+---
+title: Render videos
+description: Render whole projects, single scenes, ranges, or PNG frames — with quality controls.
+---
+
+## Goal
+
+Get exactly the output you want out of `cinecode render`, fast.
+
+## Render the whole project
+
+```bash
+cinecode render my-video -o my-video.mp4
+```
+
+Scenes play in the order listed in `codescene.toml`.
+
+## Render a single scene
+
+While iterating, render just the scene you're working on. Scenes can be selected
+by **name** or **1-based index**:
+
+```bash
+cinecode render my-video -s intro -o intro.mp4
+cinecode render my-video -s 2 -o second-scene.mp4
+```
+
+<Callout type="warn">
+  Scene indices start at **1**, not 0. `-s 0` is an error.
+</Callout>
+
+## Render a range of scenes
+
+```bash
+cinecode render my-video --from intro --to graph -o part1.mp4
+```
+
+`--from` / `--to` accept names or indices and are inclusive.
+
+## Control quality and size
+
+```bash
+cinecode render my-video -o final.mp4 --crf 18 --preset slow
+```
+
+- `--crf <18–28>` — constant rate factor. Lower = higher quality, larger file.
+- `--preset <p>` — ffmpeg speed/efficiency preset (`ultrafast` … `veryslow`).
+
+## Export frames instead of a video
+
+```bash
+cinecode render my-video --format png -o frames/
+```
+
+This writes numbered PNGs — handy for thumbnails or external editing.
+
+## Quieter or louder output
+
+```bash
+cinecode render my-video -o out.mp4 -q   # quiet
+cinecode render my-video -o out.mp4 -v   # verbose
+```
+
+## Render on the GPU
+
+For shaders and bloom, enable the GPU backend:
+
+```bash
+cinecode render my-video -o out.mp4 --gpu --bloom 0.8
+```
+
+<Video src="effects_gpu" caption="GPU render with WGSL effects and a bloom pass." />
+
+See [Apply GPU shaders](/docs/how-to/apply-gpu-shaders) for the shader workflow.
+
+## Full flag list
+
+Everything above, plus a few extras, is documented in the
+[CLI reference](/docs/reference/cli).

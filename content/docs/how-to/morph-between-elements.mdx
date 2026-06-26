@@ -1,0 +1,60 @@
+---
+title: Morph between elements
+description: Dissolve and morph one element into another for smooth visual transformations.
+---
+
+## Goal
+
+Transform one element into another on screen — a word into another word, or one
+shape into a different shape — rather than cutting between them.
+
+## The morph method
+
+```rust
+s.morph(old, new, style, start, dur);
+```
+
+- `old` — the element to transform from
+- `new` — the element to transform into
+- `style` — how the morph interpolates (e.g. a dissolve)
+- `start`, `dur` — timing in frames
+
+## Morph text
+
+Create both pieces of text, then morph between them:
+
+```rust
+let s = scene("Word Morph", 160);
+
+let a = s.text("erosion", 480, 320).font_size(64);
+let b = s.text("deposition", 440, 320).font_size(64);
+
+a.fade_in(0, 16);
+s.morph(a, b, "dissolve", 60, 40);
+```
+
+<Video src="morph" caption="One word morphing into another." />
+
+## Per-node morph animations
+
+Nodes also carry morph-style transitions you can use on their own:
+
+```rust
+node.morph_out(80, 20); // morph the node away
+node.grow_in(0, 20);    // grow it into being
+node.blur_in(0, 18);    // resolve from a blur
+node.blur_out(80, 18);  // dissolve into a blur
+```
+
+## Tips
+
+- Morphs read best when the two elements share a position and size.
+- Pair with [easing](/docs/how-to/use-easing-and-tweens) for a softer transform.
+- For scene-to-scene changes, use a [transition](/docs/reference/transitions)
+  instead of a morph.
+
+## Reference
+
+`morph` and the morph-style node animations are in
+[Scene API](/docs/reference/scene-api) and
+[Code & node animations](/docs/reference/code-animations).

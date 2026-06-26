@@ -1,0 +1,64 @@
+---
+title: Simulations as nodes
+description: Why a running terrain and a line of code are the same kind of thing.
+---
+
+One idea unlocks a lot of CineCode's expressiveness: **a simulation is just
+another node on the timeline.** A terrain, an A* search, or a flock of boids
+lives in a scene exactly like a piece of text or a block of code.
+
+## The uniform model
+
+Every visual element is a node with animation tracks. That includes
+simulations:
+
+```rust
+let code = s.code(read("src/astar.rs"), "rust", 96, 160); // a node
+let grid = s.pathfind(700, 150);                          // also a node
+```
+
+Both can be positioned, revealed, eased, focused, and — crucially — **linked**:
+
+```rust
+s.link(code, 9, grid, 100, 90); // line 9 drives the search
+```
+
+Because they share the node model, binding code to a diagram isn't a special
+case bolted on; it's the natural consequence of treating them the same way.
+
+## Simulations are pure functions
+
+Each simulation is a deterministic function of its parameters and the frame:
+
+```text
+state(seed, params, n) → cells / agents / path
+```
+
+Given a `seed` and frame `n`, it always returns the same state. This is why:
+
+- A simulation can be **seeked** — frame 120 is computed directly, not by
+  stepping through 0–119.
+- A render is **reproducible** — the same `seed` yields the same animation on any
+  machine ([Determinism](/docs/explanation/determinism)).
+- A simulation slots onto the **timeline** like any keyframed property; `run`,
+  `hold`, and `loop` are just ways of mapping frames to simulation progress.
+
+## What this enables
+
+- **Code-synced diagrams.** The flagship feature: a line lights up and its
+  algorithm comes alive beside it.
+- **Composability.** Multiple simulations, code blocks, and shapes coexist in one
+  scene, all on the same clock.
+- **Consistency.** The same easing, focus, and camera tools work on a simulation
+  as on text — nothing new to learn.
+
+<Mermaid
+  chart={`flowchart LR
+    P["seed + params"] --> F["sim(seed, params, n)"]
+    N["frame n"] --> F
+    F --> ST["simulation state"]
+    ST --> R["drawn as a node"]`}
+/>
+
+The six built-in simulations and their parameters are documented in
+[Simulations reference](/docs/reference/simulations).

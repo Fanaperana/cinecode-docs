@@ -1,0 +1,56 @@
+---
+title: The Scene Document
+description: The JSON-serializable intermediate representation at the heart of the engine.
+---
+
+The **Scene Document** is CineCode's intermediate representation (IR). It's what
+`cinecode-script` produces after loading a project, and what `cinecode-render`
+consumes to draw frames. Everything in between operates on this one data model.
+
+## What it is
+
+A Scene Document is a fully **serializable** description of a film: scenes, the
+nodes within them, their animation tracks, the camera, transitions, and
+references to assets. Because it's plain data (JSON-serializable), it carries no
+hidden runtime state — which is exactly what makes rendering
+[deterministic](/docs/explanation/determinism).
+
+## Why have an IR at all
+
+Putting a data model between *authoring* and *rendering* decouples them:
+
+- The **front end** (Rhai `.ccs` scripts, the TOML manifest) only needs to
+  *produce* a Scene Document. New authoring surfaces could be added without
+  touching the renderer.
+- The **back end** (CPU and GPU renderers) only needs to *consume* one. Either
+  backend draws the same document identically.
+- Tools in between — validators, optimizers, analyzers — can read and transform
+  the document without re-running scripts.
+
+<Mermaid
+  chart={`flowchart LR
+    S[".ccs (Rhai)<br/>codescene.toml"] --> D["Scene Document (IR)"]
+    D --> CPU["CPU renderer"]
+    D --> GPU["GPU renderer"]
+    D --> T["check / tools"]`}
+/>
+
+## Nodes and tracks
+
+Within a scene, every visual element — text, code, a shape, an image, a running
+simulation — is a **node**. Each node carries **animation tracks**: timed
+keyframes (with easing) describing how its properties change over the scene.
+
+This uniformity is deliberate: a line of code and a terrain simulation are the
+same *kind* of thing on the timeline, which is why both can be animated, focused,
+and linked together. See [Simulations as nodes](/docs/explanation/simulations-as-nodes).
+
+## Evaluation
+
+At render time the document isn't replayed step by step. Instead, for a given
+frame `n`, the timeline **evaluates** each node's tracks to a concrete value at
+`n`. The result is an `AnimatedState` (plus a `CameraState`) — a snapshot of
+exactly what the frame should contain, ready to draw.
+
+That evaluate-then-draw split is covered in
+[The rendering pipeline](/docs/explanation/rendering-pipeline).

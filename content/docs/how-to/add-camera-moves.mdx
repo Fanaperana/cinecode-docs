@@ -1,0 +1,70 @@
+---
+title: Add camera moves
+description: Pan, zoom, and rack-focus to turn a static layout into a directed shot.
+---
+
+## Goal
+
+Choreograph a camera so the frame moves with your narration — pushing in on a
+detail, then pulling back to a wide.
+
+## Request a camera
+
+Each scene can have one camera:
+
+```rust
+let cam = s.camera();
+```
+
+All coordinates are in the scene's pixel space (e.g. `1280×720`), before the
+camera transform.
+
+## Focus on an element
+
+`focus_on` frames a node, optionally a specific line, at a given zoom:
+
+```rust
+// focus_on(node, x, y, zoom, line)
+cam.focus_on(code, 96, 24, 1.7, 2); // push in on line 2 of `code`
+```
+
+## Pan to a point
+
+```rust
+// move_to(x, y, start, dur)
+cam.move_to(640, 360, 150, 30); // glide to centre over frames 150–180
+```
+
+## Zoom
+
+```rust
+// zoom_to(zoom, start, dur)
+cam.zoom_to(1.0, 150, 30); // ease back to 1× while panning
+```
+
+## A complete camera arc
+
+Push in on the code, hold, then pull back to reveal the whole scene:
+
+```rust
+let s = scene("Introduction", 180);
+let code = s.code(read("src/main.rs"), "rust", 96, 160);
+code.fade_in(0, 18).typewriter(8, 70);
+
+let cam = s.camera();
+cam.focus_on(code, 96, 24, 1.7, 2);  // open tight on line 2
+cam.move_to(640, 360, 150, 30);       // pull back…
+cam.zoom_to(1.0, 150, 30);            // …and zoom out together
+```
+
+<Video src="intro" caption="A camera push-in and pull-back over typing code." />
+
+## Tips
+
+- Move and zoom in the **same frame window** so they feel like one motion.
+- Combine with [easing](/docs/how-to/use-easing-and-tweens) for cinematic accel/decel.
+- Keep moves slow and purposeful — a documentary camera rarely hurries.
+
+## Reference
+
+See [Camera reference](/docs/reference/camera) for exact signatures.

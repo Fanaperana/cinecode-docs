@@ -1,0 +1,19 @@
+{
+  "title": "How-to Guides",
+  "icon": "Wrench",
+  "pages": [
+    "index",
+    "install-and-build",
+    "create-a-project",
+    "render-videos",
+    "highlight-and-focus-code",
+    "edit-code-live",
+    "bind-code-to-simulations",
+    "add-camera-moves",
+    "use-easing-and-tweens",
+    "morph-between-elements",
+    "draw-shapes-and-images",
+    "apply-gpu-shaders",
+    "customize-themes-and-fonts"
+  ]
+}

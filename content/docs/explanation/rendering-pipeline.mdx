@@ -1,0 +1,79 @@
+---
+title: The rendering pipeline
+description: From per-frame evaluation to ffmpeg, on both the CPU and GPU backends.
+---
+
+Rendering turns a [Scene Document](/docs/explanation/scene-document) into an MP4.
+It happens one frame at a time, and every frame follows the same two-step shape:
+**evaluate, then draw.**
+
+## Per-frame: evaluate then draw
+
+<Mermaid
+  chart={`flowchart TD
+    D["Scene Document"] --> E["Evaluate tracks at frame n"]
+    E --> AS["AnimatedState"]
+    E --> CS["CameraState"]
+    AS --> P["Project camera + draw"]
+    CS --> P
+    P --> RGBA["RGBA frame"]`}
+/>
+
+1. **Evaluate.** The timeline computes each node's animated properties *at* frame
+   `n`, producing an `AnimatedState`, and resolves the camera into a
+   `CameraState`. Simulations contribute their state for frame `n` here too.
+2. **Draw.** The camera is projected, and the state is rasterized into an RGBA
+   frame.
+
+Keeping these steps separate is what makes rendering deterministic and
+seekable — see [Determinism](/docs/explanation/determinism).
+
+## Two backends
+
+| Backend | Stack | Use it for |
+| --- | --- | --- |
+| **CPU** | cosmic-text + swash | The default. Crisp text and code, no GPU needed. |
+| **GPU** | wgpu + WGSL | Shaders and the bloom post-process (`--gpu`). |
+
+The CPU backend handles high-quality text shaping and rasterization. The GPU
+backend adds programmable [shaders](/docs/reference/shaders) and bloom.
+
+## GPU compositing order
+
+When rendering on the GPU, each frame is composited in a fixed order:
+
+```text
+background shaders → CPU/content draw → region & overlay shaders → bloom
+```
+
+So a `background_shader` sits behind everything, region/overlay shaders sample
+and modify the drawn content, and bloom is applied last:
+
+<Video src="effects_gpu" caption="A GPU frame: background, region, and overlay shaders, then bloom." />
+
+## Encoding
+
+Finished RGBA frames are streamed — as raw video — into **ffmpeg**, which encodes
+H.264 and muxes any [audio](/docs/reference/project-manifest#audio) into the final
+container:
+
+```text
+RGBA frames → ffmpeg (rawvideo → H.264) → output.mp4
+```
+
+`--crf` and `--preset` tune that final encode; `--format png` skips it entirely
+and writes frames to disk instead. See the [CLI reference](/docs/reference/cli).
+
+## The whole journey
+
+<Mermaid
+  chart={`flowchart LR
+    A["codescene.toml + .ccs + src"] --> B["Scene Document"]
+    B --> C["per-frame evaluate"]
+    C --> D["draw (CPU / GPU)"]
+    D --> E["ffmpeg"]
+    E --> F["MP4"]`}
+/>
+
+For where each stage lives in the codebase, see
+[Architecture](/docs/explanation/architecture).

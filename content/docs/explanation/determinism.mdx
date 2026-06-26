@@ -1,0 +1,53 @@
+---
+title: Determinism
+description: What "the same pixels every time" buys you, and how CineCode achieves it.
+---
+
+Determinism is CineCode's central promise: **render a project twice and get
+byte-identical output** — on your laptop, on a teammate's machine, and in CI.
+
+## The core invariant
+
+Every frame is a **pure function** of two things:
+
+```text
+frame(project, n) → pixels
+```
+
+- `project` — the manifest, scene scripts, and source files
+- `n` — the frame number
+
+Nothing else feeds in. There's no wall-clock time, no random number generator
+seeded from the OS, no GPU-dependent rounding leaking into the result.
+
+## How it's achieved
+
+- **Seeded randomness.** Simulations take an explicit `seed`. Given the same
+  seed and frame, a simulation produces exactly the same state — see
+  [Simulations as nodes](/docs/explanation/simulations-as-nodes).
+- **Frame-indexed evaluation.** Animations are evaluated *at* frame `n`, not by
+  accumulating deltas over time. There's no drift from variable frame timing.
+- **Separation of evaluate and draw.** State is computed independently of how (or
+  whether) it's drawn, so previewing frame 900 gives the same state as playing
+  straight through to it.
+- **A serializable IR.** The [Scene Document](/docs/explanation/scene-document)
+  fully captures a film as data, with no hidden runtime state.
+
+## Why it matters
+
+<Cards>
+  <Card title="Seekable" description="Any frame can be computed directly, so previews and partial renders (--from/--to, -s) are fast and exact." />
+  <Card title="Reproducible" description="Re-render after an edit and only what you changed changes — perfect for iteration and review." />
+  <Card title="Portable" description="No machine-specific output. Clone the repo, render, and get the same film." />
+  <Card title="Diffable" description="The whole documentary is a handful of text files under version control." />
+</Cards>
+
+## A practical consequence
+
+Because frame `n` doesn't depend on frames `0..n`, you can:
+
+- render scene 7 alone without rendering 1–6,
+- jump straight to a thumbnail at any timestamp,
+- and trust that the preview you see is exactly the final pixel output.
+
+That guarantee is what turns "making a video" into "compiling a film."

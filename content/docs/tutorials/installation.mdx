@@ -1,0 +1,124 @@
+---
+title: Install CineCode
+description: Get the engine and ffmpeg working, then render the bundled example documentary.
+---
+
+In this first lesson you'll install everything CineCode needs and render the
+example project — so you can confirm your setup works before writing a single
+line of your own.
+
+## Step 1 — Install the prerequisites
+
+CineCode needs two things on your machine:
+
+<Steps>
+<Step>
+
+### Rust (stable)
+
+Install it with [rustup](https://rustup.rs):
+
+```bash
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+Verify:
+
+```bash
+rustc --version
+cargo --version
+```
+
+</Step>
+<Step>
+
+### ffmpeg
+
+CineCode pipes raw frames into ffmpeg to produce the final MP4.
+
+<Tabs items={['macOS', 'Debian/Ubuntu', 'Windows']}>
+
+<Tab value="macOS">
+
+```bash
+brew install ffmpeg
+```
+
+</Tab>
+
+<Tab value="Debian/Ubuntu">
+
+```bash
+sudo apt update && sudo apt install ffmpeg
+```
+
+</Tab>
+
+<Tab value="Windows">
+
+Download a build from [ffmpeg.org](https://ffmpeg.org/download.html) and add its `bin` folder to your `PATH`.
+
+</Tab>
+
+</Tabs>
+
+Verify:
+
+```bash
+ffmpeg -version
+```
+
+</Step>
+</Steps>
+
+<Callout type="warn">
+  If `ffmpeg` isn't on your `PATH`, rendering will fail at the very last step.
+  Run `ffmpeg -version` and make sure it prints something before continuing.
+</Callout>
+
+## Step 2 — Get CineCode
+
+Clone the repository and build a release binary:
+
+```bash
+git clone https://github.com/Fanaperana/cinecode
+cd cinecode
+cargo build --release
+```
+
+The first build compiles all seven crates and may take a few minutes. When it
+finishes you'll have a binary at `./target/release/cinecode`.
+
+Check it runs:
+
+```bash
+./target/release/cinecode --help
+```
+
+<Callout type="info">
+  To type `cinecode` instead of the full path, copy the binary somewhere on your
+  `PATH` — see [Install and build](/docs/how-to/install-and-build).
+</Callout>
+
+## Step 3 — Render the example
+
+The repo ships with a complete example documentary, `rivers-project`. Render it:
+
+```bash
+./target/release/cinecode render examples/rivers-project -o rivers.mp4
+```
+
+You'll see per-scene progress as the engine evaluates each frame and streams it
+to ffmpeg. After a few seconds you'll have `rivers.mp4` — open it and you should
+see exactly this:
+
+<Video src="rivers-full" caption="rivers.mp4 — your first render. 17 scenes, one command." />
+
+## You did it
+
+You have a working CineCode toolchain and a rendered video. Next, you'll build
+your own project from scratch.
+
+<Cards>
+  <Card href="/docs/tutorials/your-first-video" title="Next: Your first video →" description="Create a project and render a title card." />
+</Cards>

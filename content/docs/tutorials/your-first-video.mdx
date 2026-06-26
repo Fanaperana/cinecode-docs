@@ -1,0 +1,108 @@
+---
+title: Your first video
+description: Create a CineCode project from scratch and render an animated title card.
+---
+
+Now that the engine works, let's make something of your own: a short title card
+where text fades in and a line of code types itself out.
+
+## Step 1 — Scaffold a project
+
+The `new` command creates a ready-to-render project:
+
+```bash
+./target/release/cinecode new my-video
+```
+
+That gives you:
+
+```text
+my-video/
+├── codescene.toml      # the manifest
+├── scenes/
+│   └── intro.ccs       # one starter scene
+└── src/
+    └── main.rs         # sample code to show
+```
+
+Render it as-is to confirm the scaffold works:
+
+```bash
+./target/release/cinecode render my-video -o my-video.mp4
+```
+
+## Step 2 — Understand the manifest
+
+Open `codescene.toml`. It lists which scenes to play and how big the video is:
+
+```toml title="codescene.toml"
+scenes = ["intro"]
+theme = "dark_documentary"
+
+[episode]
+title = "My First Video"
+
+[output]
+fps = 30
+width = 1280
+height = 720
+```
+
+<Callout type="warn">
+  In TOML, all bare keys (`scenes`, `theme`, `fonts`) must appear **before** any
+  `[table]`. If you see a parse error, check that ordering first.
+</Callout>
+
+## Step 3 — Write the scene
+
+Replace the contents of `scenes/intro.ccs` with this storyboard:
+
+```rust title="scenes/intro.ccs"
+// scene(name, duration_in_frames) — at 30 fps, 180 frames = 6 seconds
+let s = scene("Introduction", 180);
+
+// A title that fades in, with a soft glow
+s.text("Hello, CineCode", 96, 64)
+  .font_size(56)
+  .glow(0.6)
+  .fade_in(0, 20);
+
+// The code from src/main.rs, typed out like a keyboard
+let code = s.code(read("src/main.rs"), "rust", 96, 180);
+code.font_size(40)
+    .shadow(0.5)
+    .fade_in(0, 18)
+    .typewriter(8, 80);
+```
+
+What each piece does:
+
+- `scene("Introduction", 180)` declares a 180-frame scene.
+- `s.text(...)` adds a text element at pixel `(96, 64)`.
+- `.fade_in(0, 20)` fades it in over frames 0–20.
+- `s.code(read("src/main.rs"), "rust", ...)` loads and syntax-highlights real code.
+- `.typewriter(8, 80)` types it out starting at frame 8, over 80 frames.
+
+## Step 4 — Render and watch
+
+```bash
+./target/release/cinecode render my-video -o my-video.mp4
+```
+
+You should get something that looks like the intro scene of the example:
+
+<Video src="intro" caption="A title fades in while code types itself out." />
+
+<Callout type="info">
+  Coordinates are in pixels from the top-left, before camera transforms. With a
+  1280×720 output, `x = 96` leaves a comfortable left margin.
+</Callout>
+
+## You did it
+
+You created and rendered your own project. Next, you'll make the code *perform* —
+spotlighting and dimming lines like a real documentary.
+
+<Cards>
+  <Card href="/docs/tutorials/animating-code" title="Next: Animating code →" description="Spotlight and dim lines to direct the viewer's eye." />
+</Cards>

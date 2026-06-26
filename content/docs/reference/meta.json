@@ -1,0 +1,19 @@
+{
+  "title": "Reference",
+  "icon": "BookMarked",
+  "pages": [
+    "index",
+    "cli",
+    "project-manifest",
+    "ccs-language",
+    "scene-api",
+    "code-animations",
+    "simulations",
+    "camera",
+    "easing",
+    "transitions",
+    "themes",
+    "shaders",
+    "languages"
+  ]
+}

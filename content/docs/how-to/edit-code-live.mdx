@@ -1,0 +1,88 @@
+---
+title: Edit code live
+description: Insert, delete, and refactor code on screen, mid-scene, to show changes happening.
+---
+
+## Goal
+
+Show code *changing* — inserting new lines, deleting characters, and refactoring —
+so a viewer watches the edit happen rather than seeing before/after stills.
+
+## Type it out first
+
+Most live edits begin with a `typewriter`:
+
+```rust
+let code = s.code(read("src/main.rs"), "rust", 96, 160);
+code.fade_in(0, 12).typewriter(6, 60);
+```
+
+## Backspace and removal styles
+
+Delete characters from the end of the current text:
+
+```rust
+code.backspace(90, 20); // delete the tail over frames 90–110
+```
+
+To delete back to a known prefix and keep it:
+
+```rust
+code.backspace_to("    return a / b", 90, 20);
+```
+
+CineCode offers several removal *styles* for how vanishing text leaves the
+screen — fade, wipe, shrink, blur, or morph:
+
+<Video src="remove_styles" caption="Backspace and the family of removal styles." />
+
+```rust
+code.fade_clip(60, 16);   // fade the clipped tail
+code.wipe_out(60, 16);    // wipe it away
+code.shrink_out(60, 16);  // shrink it out
+code.blur_out(60, 16);    // blur it out
+code.morph_out(60, 16);   // morph it out
+```
+
+## Retype the corrected version
+
+After removing, type the replacement:
+
+```rust
+code.retype("    if b == 0 { return 0 }\n    return a / b", 110, 40);
+```
+
+A complete refactor — guarding a divide by zero — looks like this:
+
+<Video src="edit_source" caption="A live refactor performed on screen." />
+
+## Insert new lines in place
+
+To reveal new lines without retyping the whole block, use insert animations:
+
+<Video src="inserts" caption="Insert animations open space and reveal new code in place." />
+
+```rust
+code.grow_in(80, 20);   // grow the inserted region in
+code.slide_up(80, 20);  // existing lines slide up to make room
+```
+
+## A full live-edit scene
+
+<Video src="edit" caption="A complete live-code-edit scene from the example project." />
+
+```rust
+let s = scene("Live Code Edit", 200);
+let code = s.code(read("src/main.rs"), "rust", 96, 160);
+code.font_size(34).fade_in(0, 12).typewriter(6, 70);
+
+code.spotlight(4, 0.6, 90, 16);
+code.backspace_to("fn divide(a: i32, b: i32) -> i32 {", 120, 18);
+code.retype("fn divide(a: i32, b: i32) -> i32 {\n    if b == 0 { return 0 }\n    a / b\n}", 145, 40);
+code.unfocus(195, 5);
+```
+
+## Reference
+
+Every animation method (`backspace`, `backspace_to`, `retype`, `grow_in`,
+`fade_clip`, …) is listed in [Code & node animations](/docs/reference/code-animations).

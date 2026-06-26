@@ -1,0 +1,12 @@
+{
+  "title": "Tutorials",
+  "icon": "GraduationCap",
+  "pages": [
+    "index",
+    "installation",
+    "your-first-video",
+    "animating-code",
+    "your-first-simulation",
+    "a-complete-documentary"
+  ]
+}

@@ -1,0 +1,123 @@
+---
+title: Project manifest
+description: Every key in codescene.toml.
+---
+
+`codescene.toml` is the project manifest. It selects scenes and configures the
+output.
+
+<Callout type="warn">
+  TOML requires all **bare keys** (`scenes`, `theme`, `fonts`) to appear *before*
+  any `[table]` section. Put them at the top of the file.
+</Callout>
+
+## Root keys
+
+| Key | Type | Description |
+| --- | --- | --- |
+| `scenes` | array of strings | Scene names to render, **in play order**. Each maps to `scenes/<name>.ccs`. |
+| `theme` | string | Project theme (see [Themes](/docs/reference/themes)). Default `dark_documentary`. |
+| `fonts` | array of paths | Font files to load and make available to `font(...)`. |
+
+```toml
+scenes = ["intro", "terrain", "outro"]
+theme = "dark_documentary"
+fonts = ["assets/fonts/Inter.ttf"]
+```
+
+## `[episode]`
+
+| Key | Type | Description |
+| --- | --- | --- |
+| `title` | string | The episode/film title. |
+
+```toml
+[episode]
+title = "How Rivers Form"
+```
+
+## `[output]`
+
+| Key | Type | Default | Description |
+| --- | --- | --- | --- |
+| `fps` | integer | `30` | Frames per second. |
+| `width` | integer | `1280` | Output width in pixels. |
+| `height` | integer | `720` | Output height in pixels. |
+| `background` | `[r, g, b, a]` | — | Default background color (0–255). |
+
+```toml
+[output]
+fps = 30
+width = 1280
+height = 720
+background = [10, 12, 20, 255]
+```
+
+## `[shaders]`
+
+Name-to-path map of WGSL shaders, usable on the GPU backend.
+
+```toml
+[shaders]
+aurora = "shaders/aurora.wgsl"
+glitch = "shaders/glitch.wgsl"
+```
+
+See [Shaders](/docs/reference/shaders).
+
+## `[audio]`
+
+| Key | Type | Description |
+| --- | --- | --- |
+| `track` | path | Audio file muxed into the final video. |
+| `volume` | float | Playback volume (e.g. `0.6`). |
+
+```toml
+[audio]
+track = "assets/music.mp3"
+volume = 0.6
+```
+
+## `[transition]`
+
+Default transition between scenes.
+
+| Key | Type | Description |
+| --- | --- | --- |
+| `kind` | string | Transition kind (see [Transitions](/docs/reference/transitions)). |
+| `frames` | integer | Duration of the transition. |
+| `color` | `[r, g, b]` | Color for `fade_color`-style transitions. |
+
+```toml
+[transition]
+kind = "crossfade"
+frames = 18
+```
+
+## Full example
+
+```toml title="codescene.toml"
+scenes = ["intro", "terrain", "pathfind", "outro"]
+theme = "dark_documentary"
+fonts = ["assets/fonts/Inter.ttf"]
+
+[episode]
+title = "How Rivers Form"
+
+[output]
+fps = 30
+width = 1280
+height = 720
+background = [10, 12, 20, 255]
+
+[transition]
+kind = "crossfade"
+frames = 18
+
+[shaders]
+aurora = "shaders/aurora.wgsl"
+
+[audio]
+track = "assets/music.mp3"
+volume = 0.6
+```

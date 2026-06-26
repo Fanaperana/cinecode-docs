@@ -1,0 +1,82 @@
+---
+title: Apply GPU shaders
+description: Add WGSL shader effects and a bloom post-process using the GPU backend.
+---
+
+## Goal
+
+Add custom visual effects — backgrounds, region effects, overlays — and a bloom
+glow, rendered on the GPU.
+
+<Callout type="warn">
+  Shaders and bloom require the **GPU backend**. Always render these with `--gpu`.
+</Callout>
+
+## Step 1 — Write a WGSL shader
+
+A CineCode shader implements one function:
+
+```wgsl title="shaders/aurora.wgsl"
+fn shade(uv: vec2<f32>, local: vec2<f32>, frag: vec2<f32>) -> vec4<f32> {
+    let t = u.time;
+    let wave = sin(uv.x * 8.0 + t) * 0.5 + 0.5;
+    let g = mix(0.05, 0.6, wave * uv.y);
+    return vec4<f32>(0.04, g, 0.5 * g + 0.1, 1.0);
+}
+```
+
+The full uniform/binding contract (`resolution`, `time`, `progress`, `rect`,
+`params`, the `src` texture, and `samp` sampler) is in
+[Shaders reference](/docs/reference/shaders).
+
+## Step 2 — Declare it in the manifest
+
+```toml title="codescene.toml"
+[shaders]
+aurora = "shaders/aurora.wgsl"
+glitch = "shaders/glitch.wgsl"
+scanlines = "shaders/scanlines.wgsl"
+```
+
+## Step 3 — Apply it in a scene
+
+There are several application points, composited in this order:
+**background → CPU content → region/overlay shaders → bloom**.
+
+```rust
+// Full-frame animated background, behind everything
+s.background_shader("aurora");
+
+// A shader applied to a rectangular region (samples the content under it)
+s.shader("glitch", 700, 160, 420, 300).params(0.8, 0.2, 0.0, 0.0);
+
+// A full-frame overlay on top of all content
+s.overlay_shader("scanlines");
+```
+
+Use `shader_fill` to fill a region with a shader that ignores the content
+beneath it, and `.params(a, b, c, d)` to pass up to four floats into your WGSL.
+
+## Step 4 — Render with bloom
+
+```bash
+cinecode render my-video -o effects.mp4 --gpu --bloom 0.8
+```
+
+`--bloom <n>` adds a bright-pass glow as the final compositing step.
+
+<Video src="effects_gpu" caption="GPU render: background, region, and overlay shaders plus bloom." />
+
+## CPU vs GPU effects
+
+Some effects also exist on the CPU backend (no flag needed). Compare:
+
+<VideoGrid>
+  <Video src="effects" caption="CPU effects showcase." />
+  <Video src="effects_gpu" caption="GPU shaders + bloom." />
+</VideoGrid>
+
+## Reference
+
+The WGSL contract, every uniform, and every binding are in
+[Shaders reference](/docs/reference/shaders).

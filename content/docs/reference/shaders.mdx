@@ -1,0 +1,95 @@
+---
+title: Shaders
+description: The WGSL shader contract — entry point, uniforms, bindings, and compositing order.
+---
+
+Shaders run on the **GPU backend** only (`--gpu`). Declare them in the
+[manifest](/docs/reference/project-manifest#shaders), then apply them in a scene.
+
+```toml title="codescene.toml"
+[shaders]
+aurora = "shaders/aurora.wgsl"
+```
+
+## The entry point
+
+Every CineCode shader implements a single function:
+
+```wgsl
+fn shade(uv: vec2<f32>, local: vec2<f32>, frag: vec2<f32>) -> vec4<f32> {
+    // return the RGBA color for this pixel
+}
+```
+
+| Argument | Meaning |
+| --- | --- |
+| `uv` | Normalized coordinate in the target region, `0`–`1`. |
+| `local` | Local coordinate within the applied rect. |
+| `frag` | Pixel coordinate in the frame. |
+
+## Uniforms
+
+A uniform block `u` is bound and available inside `shade`:
+
+| Field | Description |
+| --- | --- |
+| `resolution` | Frame resolution in pixels. |
+| `time` | Seconds since the scene start. |
+| `progress` | Normalized progress `0`–`1`. |
+| `rect` | The applied region rectangle. |
+| `params` | Four floats from `.params(a, b, c, d)`. |
+| `opacity` | Current opacity. |
+| `threshold` | Bloom/threshold control. |
+| `intensity` | Effect intensity. |
+
+## Bindings
+
+| Binding | Type | Description |
+| --- | --- | --- |
+| `src` | `texture_2d<f32>` | The content currently under the shader. |
+| `samp` | `sampler` | Sampler for `src`. |
+| `u` | `Uniforms` | The uniform block above. |
+
+Sample the underlying content like this:
+
+```wgsl
+let base = textureSample(src, samp, uv);
+```
+
+## Applying shaders
+
+| Call | Where it draws |
+| --- | --- |
+| `s.background_shader(name)` | Full-frame, behind all content. |
+| `s.shader(name, x, y, w, h)` | A rectangular region; samples the content beneath. |
+| `s.shader_fill(name, x, y, w, h)` | Fills a region, ignoring content beneath. |
+| `s.overlay_shader(name)` | Full-frame, on top of all content. |
+| `.params(a, b, c, d)` | Pass up to four floats into the shader's `u.params`. |
+
+## Compositing order
+
+For each frame the GPU backend composites in this order:
+
+```text
+background shaders → CPU/content draw → region & overlay shaders → bloom
+```
+
+Enable bloom at render time:
+
+```bash
+cinecode render my-video -o out.mp4 --gpu --bloom 0.8
+```
+
+## Example
+
+```wgsl title="shaders/scanlines.wgsl"
+fn shade(uv: vec2<f32>, local: vec2<f32>, frag: vec2<f32>) -> vec4<f32> {
+    let base = textureSample(src, samp, uv);
+    let line = 0.85 + 0.15 * sin(frag.y * 3.14159 + u.time * 4.0);
+    return vec4<f32>(base.rgb * line, base.a);
+}
+```
+
+<Video src="effects_gpu" caption="Background, region, and overlay shaders plus bloom." />
+
+See also: [Apply GPU shaders](/docs/how-to/apply-gpu-shaders).

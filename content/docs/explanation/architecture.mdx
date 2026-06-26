@@ -1,0 +1,61 @@
+---
+title: Architecture
+description: The crates that make up CineCode and how data flows from manifest to MP4.
+---
+
+CineCode is a Rust workspace of seven focused crates. Each owns one stage of the
+journey from a text project to a finished video.
+
+## The crates
+
+| Crate | Responsibility |
+| --- | --- |
+| `cinecode-core` | The **Scene Document** / IR — the data model every other crate reads or writes. |
+| `cinecode-timeline` | Animation tracks: evaluating keyframes and easing per frame. |
+| `cinecode-highlight` | Syntax highlighting via syntect (~212 languages). |
+| `cinecode-sim` | Deterministic simulations: terrain, pathfind, particles, graph, life, boids. |
+| `cinecode-render` | Rendering: a CPU backend (cosmic-text + swash) and a GPU backend (wgpu, WGSL, bloom). |
+| `cinecode-script` | Loading projects: parsing `codescene.toml` (TOML) and `.ccs` scripts (Rhai). |
+| `cinecode-cli` | The `cinecode` command (clap) and the ffmpeg encode pipeline. |
+
+## How data flows
+
+<Mermaid
+  chart={`flowchart TD
+    A["codescene.toml<br/>scenes/*.ccs<br/>src/*"] -->|cinecode-script| B["Scene Document (IR)"]
+    B -->|per frame| C["cinecode-timeline<br/>evaluate tracks"]
+    C --> D["AnimatedState + CameraState"]
+    D -->|cinecode-render| E["RGBA frame"]
+    F["cinecode-sim"] --> D
+    G["cinecode-highlight"] --> B
+    E -->|cinecode-cli| H["ffmpeg<br/>rawvideo → H.264"]
+    H --> I["output.mp4"]`}
+/>
+
+1. **Load.** `cinecode-script` reads the manifest and runs each `.ccs` script
+   (Rhai), with `cinecode-highlight` colorizing any code. The result is a
+   **Scene Document**: a JSON-serializable intermediate representation.
+2. **Evaluate.** For each frame, `cinecode-timeline` evaluates every animation
+   track and the camera to produce an `AnimatedState` and a `CameraState`.
+   Simulations from `cinecode-sim` contribute their state for that frame.
+3. **Draw.** `cinecode-render` projects the camera and rasterizes the state into
+   an RGBA frame — on the CPU, or on the GPU when `--gpu` is set.
+4. **Encode.** `cinecode-cli` streams raw frames into ffmpeg, which encodes
+   H.264 and muxes audio into the final MP4.
+
+## Why this shape
+
+- The **Scene Document** is the contract. Anything that can produce one can be
+  rendered; anything that can read one can analyze or transform a film.
+- Separating **evaluate** from **draw** is what makes rendering deterministic and
+  seekable — see [The rendering pipeline](/docs/explanation/rendering-pipeline).
+- Keeping **simulations** in their own crate lets them be pure functions of
+  `(parameters, frame)`, so they slot onto the timeline like any other node.
+
+## Related
+
+<Cards>
+  <Card href="/docs/explanation/scene-document" title="The Scene Document" description="The IR at the centre of the system." />
+  <Card href="/docs/explanation/rendering-pipeline" title="The rendering pipeline" description="Per-frame evaluation through to ffmpeg." />
+  <Card href="/docs/explanation/determinism" title="Determinism" description="Why the same project always renders the same pixels." />
+</Cards>

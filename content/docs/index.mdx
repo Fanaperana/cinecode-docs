@@ -1,0 +1,78 @@
+---
+title: CineCode Documentation
+description: A pure-Rust, deterministic cinematic engine for programming documentaries — documented the Diátaxis way.
+icon: Clapperboard
+---
+
+CineCode turns source code into **cinematic programming documentaries**. You
+describe a scene in a tiny scripting language, and the engine renders a
+pixel-identical MP4 — code that types itself out, simulations that come alive,
+and a camera that glides between them.
+
+Every video on this site is **real, unedited CineCode output**, rendered
+straight from the [`rivers-project`](https://github.com/Fanaperana/cinecode/tree/main/examples/rivers-project)
+example.
+
+<Video src="rivers-full" caption="The full “How Rivers Form” example — 17 scenes, one render." />
+
+## What makes CineCode different
+
+<Cards>
+  <Card title="Pure Rust" description="No Node.js, no browser, no headless Chrome. One binary plus ffmpeg." />
+  <Card title="Deterministic" description="The same project renders the same pixels — every run, every OS, every frame." />
+  <Card title="Code-first" description="Code is a first-class object you can type, edit, spotlight, and bind to diagrams." />
+  <Card title="Living diagrams" description="Terrain, A*, particles, graphs, Game of Life, and boids — all bound to code." />
+</Cards>
+
+## Find your way around
+
+This documentation follows the [Diátaxis](https://diataxis.fr) framework. The
+four sections answer four different needs:
+
+<Cards>
+  <Card href="/docs/tutorials" title="🎓 Tutorials" description="Learning-oriented. Hands-on lessons that take you from install to a finished documentary." />
+  <Card href="/docs/how-to" title="🛠️ How-to guides" description="Task-oriented. Focused recipes for getting one specific job done." />
+  <Card href="/docs/reference" title="📖 Reference" description="Information-oriented. Precise descriptions of every function, flag, and parameter." />
+  <Card href="/docs/explanation" title="💡 Explanation" description="Understanding-oriented. The ideas, architecture, and design behind the engine." />
+</Cards>
+
+## In a nutshell
+
+A CineCode project is a folder:
+
+```text
+my-video/
+├── codescene.toml      # the manifest: scenes, theme, output size
+├── scenes/
+│   └── intro.ccs       # a scene script (Rhai)
+└── src/
+    └── main.rs         # the real code you want to show
+```
+
+A scene script reads like a storyboard:
+
+```rust title="scenes/intro.ccs"
+let s = scene("Introduction", 180);
+
+s.text("Hello, CineCode", 96, 48).font_size(56).glow(0.6).fade_in(0, 20);
+
+let code = s.code(read("src/main.rs"), "rust", 96, 160);
+code.font_size(40).shadow(0.5).fade_in(0, 18).typewriter(8, 70);
+code.spotlight(2, 0.6, 96, 18);
+
+let cam = s.camera();
+cam.focus_on(code, 96, 24, 1.7, 2);
+cam.move_to(640, 360, 150, 30);
+cam.zoom_to(1, 150, 30);
+```
+
+And one command renders it:
+
+```bash
+cinecode render my-video -o my-video.mp4
+```
+
+<Callout type="info">
+  New here? Start with the [tutorials](/docs/tutorials) — they assume nothing and
+  end with a video you rendered yourself.
+</Callout>

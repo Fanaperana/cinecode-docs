@@ -1,0 +1,53 @@
+---
+title: Philosophy
+description: Why a pure-Rust, deterministic engine for code videos exists at all.
+---
+
+CineCode exists to answer a specific frustration: **explaining code on video is
+painful, fragile, and irreproducible.**
+
+## The problem with the usual tools
+
+Most programming videos are made by screen-recording an editor or hand-animating
+in a motion-graphics tool. Both have the same flaws:
+
+- **Not reproducible.** A recording captures one performance. Change a line and
+  you re-record the whole take.
+- **Not precise.** Timing, focus, and camera moves are nudged by hand until they
+  look right — and drift every time you redo them.
+- **Heavy toolchains.** Browser-based renderers drag in Node.js, a headless
+  Chrome, and a fragile pipeline that breaks between machines.
+
+## The CineCode bet
+
+CineCode treats a video as the **deterministic output of a program**, the same
+way a compiler treats a binary as the output of source code.
+
+> A documentary is source code. Render it, and you get the same film every time.
+
+That single idea drives every design decision:
+
+- **Pure Rust.** One binary, plus ffmpeg. No browser, no Node, no JIT, no
+  surprise dependencies. It builds and runs the same everywhere.
+- **Deterministic.** Every frame is a pure function of the project and the frame
+  number. The same inputs always produce the same pixels — see
+  [Determinism](/docs/explanation/determinism).
+- **Code-first.** Code isn't a screenshot pasted into a timeline; it's a live
+  object you can type, edit, spotlight, and bind to diagrams.
+- **Everything is a node.** Text, code, shapes, and even running simulations are
+  the same kind of thing on a timeline — see
+  [Simulations as nodes](/docs/explanation/simulations-as-nodes).
+
+## What you get in return
+
+Because the film is just code:
+
+- **Edits are cheap.** Change a value, re-render, done. No re-recording.
+- **It's seekable.** Any frame can be computed directly, so previews and partial
+  renders are fast.
+- **It's diffable and versionable.** Your whole documentary lives in a few text
+  files under version control.
+- **It's portable.** A teammate clones the repo and gets a byte-identical render.
+
+The rest of this section explains how that's actually built — start with the
+[architecture](/docs/explanation/architecture).

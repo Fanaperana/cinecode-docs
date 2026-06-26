@@ -1,0 +1,84 @@
+---
+title: The .ccs language
+description: The Rhai-based scene scripting language — globals, builders, and conventions.
+---
+
+A `.ccs` file is a [Rhai](https://rhai.rs) script that builds one scene. CineCode
+exposes a set of global functions and a fluent, chainable builder API.
+
+## Conventions
+
+- **One file, one scene.** A `.ccs` file should call `scene(...)` once.
+- **Coordinates** are pixels from the top-left, in the output's resolution,
+  before the camera transform.
+- **Time** is measured in frames. At 30 fps, 30 frames = 1 second.
+- **Line numbers** passed to focus/highlight methods are **1-based**.
+- **Colors** are `r, g, b` (and sometimes `a`) integers in `0–255`.
+
+## Global functions
+
+| Function | Returns | Description |
+| --- | --- | --- |
+| `scene(name, frames)` | scene | Declare the scene and its duration. |
+| `read(path)` | string | Read a file (relative to the project) as text. |
+| `ease(equation, mode)` | easing | Build a reusable easing curve. |
+
+```rust
+let s = scene("Introduction", 180);
+let source = read("src/main.rs");
+let snappy = ease(BACK, EASE_OUT);
+```
+
+## The builder pattern
+
+Everything on a scene is created through `s.*` and configured by chaining:
+
+```rust
+let s = scene("Demo", 120);
+
+s.text("Title", 96, 64)     // create a node…
+  .font_size(48)            // …style it…
+  .glow(0.5)
+  .fade_in(0, 16)           // …and animate it
+  .slide_up(0, 16).ease(CUBIC, EASE_OUT);
+```
+
+Each builder call returns the node (or scene) so chains read top-to-bottom.
+
+## What you can create
+
+- **Text** — `s.text(...)`
+- **Code** — `s.code(...)` (syntax-highlighted; see [Scene API](/docs/reference/scene-api))
+- **Shapes & images** — `s.rect`, `s.circle`, `s.path`, `s.image`, … ([guide](/docs/how-to/draw-shapes-and-images))
+- **Simulations** — `s.terrain`, `s.pathfind`, `s.particles`, `s.graph`, `s.life`, `s.boids` ([reference](/docs/reference/simulations))
+- **Camera** — `s.camera()` ([reference](/docs/reference/camera))
+
+## Focus, links, and transitions
+
+Some helpers act *on* nodes via the scene:
+
+```rust
+s.underline(code, 3, 100, 20);
+s.surround(code, 1, 4, 100, 24);
+s.point_at(code, 5, 760, 320, 120, 18);
+s.link(code, 5, sim, 120, 60);
+s.transition("crossfade", 18);
+```
+
+## Constants
+
+Easing equations and modes are available as bare identifiers:
+
+```rust
+LINEAR SINE QUAD CUBIC QUART QUINT EXPO CIRC BACK ELASTIC BOUNCE
+EASE_IN EASE_OUT EASE_IN_OUT EASE_OUT_IN
+```
+
+See [Easing](/docs/reference/easing) for how they combine.
+
+## Where to go next
+
+<Cards>
+  <Card href="/docs/reference/scene-api" title="Scene API" description="Every s.* builder in detail." />
+  <Card href="/docs/reference/code-animations" title="Node animations" description="Every animation, style, and focus method." />
+</Cards>

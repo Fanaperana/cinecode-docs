@@ -1,0 +1,105 @@
+---
+title: A complete documentary
+description: Stitch scenes together with transitions, camera moves, and audio into a finished film.
+---
+
+You can animate code and simulations. The final step is direction: stringing
+scenes together with **transitions**, guiding the eye with the **camera**, and
+adding **audio**. By the end you'll understand how the example documentary you
+rendered in lesson 1 is built.
+
+## Step 1 — Order your scenes
+
+The manifest plays scenes in array order. The example lists all seventeen:
+
+```toml title="codescene.toml"
+scenes = [
+  "intro", "terrain", "pathfind", "particles", "graph", "life", "boids",
+  "tweens", "inserts", "edit", "edit_source", "editor_theme", "font_set",
+  "remove_styles", "morph", "shapes", "effects",
+]
+theme = "dark_documentary"
+
+[episode]
+title = "How Rivers Form"
+
+[output]
+fps = 30
+width = 1280
+height = 720
+```
+
+## Step 2 — Add transitions between scenes
+
+A transition smooths the cut between scenes. Set a default for the whole project:
+
+```toml title="codescene.toml"
+[transition]
+kind = "crossfade"
+frames = 18
+```
+
+Or call it inside a scene for a one-off:
+
+```rust
+s.transition("fade_color", 24, 8, 10, 20); // dip to a dark navy
+```
+
+The available kinds — `cut`, `crossfade`, `fade_color`, `wipe_*`, `slide_*` —
+are listed in [Transitions reference](/docs/reference/transitions).
+
+## Step 3 — Direct with the camera
+
+The camera turns a static layout into a shot. Every scene can request one:
+
+```rust
+let cam = s.camera();
+
+// Push in on the code element for the first 2 seconds
+cam.focus_on(code, 96, 24, 1.7, 2);
+
+// Then glide back out to a wide shot
+cam.move_to(640, 360, 150, 30);
+cam.zoom_to(1.0, 150, 30);
+```
+
+- `focus_on(node, x, y, zoom, line)` — frame an element (optionally a line)
+- `move_to(x, y, start, dur)` — pan to a point
+- `zoom_to(zoom, start, dur)` — change magnification
+
+## Step 4 — Add audio
+
+Drop a soundtrack in the manifest:
+
+```toml title="codescene.toml"
+[audio]
+track = "assets/music.mp3"
+volume = 0.6
+```
+
+CineCode muxes it into the final MP4 alongside the video.
+
+## Step 5 — Render the whole thing
+
+Render everything in order, with quality settings for the final cut:
+
+```bash
+./target/release/cinecode render my-video -o documentary.mp4 --crf 18 --preset slow
+```
+
+- `--crf` (18–28) trades file size for quality; lower is better.
+- `--preset` trades encode speed for compression efficiency.
+
+Here is the example documentary, rendered exactly this way:
+
+<Video src="rivers-full" caption="“How Rivers Form” — all 17 scenes, transitions, camera, and audio." />
+
+## Where to go next
+
+You've built a complete documentary. From here, dive into specific techniques:
+
+<Cards>
+  <Card href="/docs/how-to" title="How-to guides" description="Recipes for cameras, shaders, morphs, live edits, and more." />
+  <Card href="/docs/reference" title="Reference" description="Every function and flag, described precisely." />
+  <Card href="/docs/explanation/architecture" title="How it works" description="The architecture and rendering pipeline behind the scenes." />
+</Cards>

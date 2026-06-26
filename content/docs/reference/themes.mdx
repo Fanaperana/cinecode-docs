@@ -1,0 +1,54 @@
+---
+title: Themes
+description: Project themes and code highlight themes.
+---
+
+CineCode has two kinds of theme: a **project theme** (the overall palette and
+background) and a **code highlight theme** (the colors of syntax-highlighted
+code). List both with `cinecode themes`.
+
+## Project themes
+
+Set in the [manifest](/docs/reference/project-manifest):
+
+```toml
+theme = "dark_documentary"
+```
+
+| Theme | Look |
+| --- | --- |
+| `dark_documentary` *(default)* | Navy background, gold accents — the classic documentary look. |
+| `hacker_terminal` | Green-on-black terminal. |
+| `scientific` | Clean, light, neutral. |
+| `blueprint` | Blue technical-drawing palette. |
+| `modern_minimal` | Restrained and bright. |
+| `retro_computer` | Amber CRT. |
+| `ancient_manuscript` | Parchment and ink. |
+
+## Code highlight themes
+
+Passed as the optional `theme` argument to `s.code()`:
+
+```rust
+// code(source, lang, theme, x, y)
+s.code(read("src/main.rs"), "rust", "Solarized (dark)", 96, 160);
+```
+
+| Theme | Notes |
+| --- | --- |
+| `base16-ocean.dark` *(default)* | Balanced dark palette. |
+| `base16-eighties.dark` | Warmer dark. |
+| `base16-mocha.dark` | Brown-toned dark. |
+| `Solarized (dark)` | The classic Solarized dark. |
+| `base16-ocean.light` | Light counterpart to the default. |
+| `Solarized (light)` | Solarized light. |
+| `InspiredGitHub` | GitHub-style light theme. |
+
+<Video src="editor_theme" caption="The same code under several highlight themes." />
+
+<Callout type="info">
+  Code highlighting is powered by syntect, so any theme available to your build
+  works. Run `cinecode themes` to see the exact list on your machine.
+</Callout>
+
+See also: [Customize themes and fonts](/docs/how-to/customize-themes-and-fonts).

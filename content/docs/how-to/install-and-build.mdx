@@ -1,0 +1,72 @@
+---
+title: Install and build
+description: Clone CineCode, build a release binary, and put it on your PATH.
+---
+
+## Goal
+
+Get a `cinecode` binary you can run from anywhere.
+
+## Build from source
+
+```bash
+git clone https://github.com/Fanaperana/cinecode
+cd cinecode
+cargo build --release
+```
+
+The binary lands at `target/release/cinecode`.
+
+## Put it on your PATH
+
+<Tabs items={['macOS / Linux', 'Cargo install']}>
+  <Tab value="macOS / Linux">
+
+Copy it to a directory already on your `PATH`:
+
+```bash
+sudo cp target/release/cinecode /usr/local/bin/cinecode
+cinecode --help
+```
+
+  </Tab>
+  <Tab value="Cargo install">
+
+Install the CLI crate directly into `~/.cargo/bin` (already on your `PATH` if you
+use rustup):
+
+```bash
+cargo install --path crates/cinecode-cli
+cinecode --help
+```
+
+  </Tab>
+</Tabs>
+
+## Verify ffmpeg
+
+Rendering shells out to ffmpeg for the final encode:
+
+```bash
+ffmpeg -version
+```
+
+If this fails, install it (`brew install ffmpeg`, `apt install ffmpeg`, or a
+[Windows build](https://ffmpeg.org/download.html)) and ensure it's on your `PATH`.
+
+## Editor support
+
+`.ccs` files are Rhai scripts. For highlighting in VS Code:
+
+```json title=".vscode/settings.json"
+{
+  "files.associations": { "*.ccs": "rhai" }
+}
+```
+
+Then install the `rhaiscript.vscode-rhai` extension.
+
+<Callout type="info">
+  The rest of the docs write `cinecode ...`. If you didn't install it to your
+  `PATH`, substitute `./target/release/cinecode ...`.
+</Callout>

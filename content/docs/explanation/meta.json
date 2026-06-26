@@ -1,0 +1,13 @@
+{
+  "title": "Explanation",
+  "icon": "Lightbulb",
+  "pages": [
+    "index",
+    "philosophy",
+    "architecture",
+    "determinism",
+    "scene-document",
+    "simulations-as-nodes",
+    "rendering-pipeline"
+  ]
+}

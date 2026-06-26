@@ -1,0 +1,104 @@
+---
+title: Code & node animations
+description: Every animation, style, focus, and shape method you can chain onto a node.
+---
+
+Builders like `s.text(...)`, `s.code(...)`, and the shape constructors return a
+**node**. You configure a node by chaining the methods below. Methods that take
+`start, dur` are timed in frames; line numbers are **1-based**.
+
+## Entrance animations
+
+| Method | Description |
+| --- | --- |
+| `fade_in(start, dur)` | Fade from transparent to opaque. |
+| `dissolve(start, dur)` | Dissolve into view. |
+| `typewriter(start, dur)` | Type text out character by character. |
+| `slide_up(start, dur)` | Rise into position. |
+| `slide_in(dir, dist, start, dur)` | Slide in from a direction over a distance. |
+| `appear(start, dur)` | Pop into existence. |
+| `grow_in(start, dur)` | Scale up from nothing. |
+| `blur_in(start, dur)` | Resolve from a blur. |
+
+## Exit animations
+
+| Method | Description |
+| --- | --- |
+| `fade_clip(start, dur)` | Fade out a clipped region. |
+| `wipe_out(start, dur)` | Wipe the node away. |
+| `shrink_out(start, dur)` | Scale down to nothing. |
+| `blur_out(start, dur)` | Dissolve into a blur. |
+| `morph_out(start, dur)` | Morph the node away. |
+
+## Movement & transforms
+
+| Method | Description |
+| --- | --- |
+| `shift(start, dur)` | Nudge the node. |
+| `pulse(start, dur)` | A brief scale pulse for emphasis. |
+| `scale_to(factor, start, dur)` | Scale to a target factor. |
+| `fade_to(opacity, start, dur)` | Fade to a target opacity. |
+| `color_to(r, g, b, start, dur)` | Tween to a target color. |
+
+## Live code editing
+
+| Method | Description |
+| --- | --- |
+| `backspace(start, dur)` | Delete characters from the end. |
+| `backspace_to(keep, start, dur)` | Delete back to a kept prefix. |
+| `retype(text, start, dur)` | Type replacement text. |
+
+See [Edit code live](/docs/how-to/edit-code-live).
+
+## Timing modifiers
+
+| Method | Description |
+| --- | --- |
+| `ease(equation, mode)` | Retarget the **previous** animation with an easing curve. |
+| `delay(frames)` | Offset the previous animation in time. |
+
+```rust
+code.slide_up(0, 24).ease(CUBIC, EASE_OUT).delay(10);
+```
+
+See [Easing](/docs/reference/easing).
+
+## Style
+
+| Method | Description |
+| --- | --- |
+| `font_size(px)` | Set the font size. |
+| `font(name)` | Select a loaded font. |
+| `glow(amount)` | Add a glow. |
+| `shadow(amount)` | Add a drop shadow. |
+| `blur(amount)` | Apply a blur. |
+
+## Shape styling
+
+| Method | Description |
+| --- | --- |
+| `fill(r, g, b)` / `no_fill()` | Set or clear the fill. |
+| `stroke(r, g, b)` | Set the stroke color. |
+| `stroke_width(px)` | Set the stroke width. |
+| `radius(px)` | Corner radius (rects/panels). |
+| `dashed()` / `dotted()` / `solid()` | Stroke style. |
+| `defocus()` / `refocus()` | Blur/unblur the shape for depth. |
+
+## Focus (code/text)
+
+| Method | Description |
+| --- | --- |
+| `highlight_line(line, start, dur)` | Brighten a line. |
+| `dim_others(line, dim, start, dur)` | Dim every line except one. |
+| `spotlight(line, dim, start, dur)` | Brighten one line and dim the rest. |
+| `unfocus(start, dur)` | Release all focus effects. |
+
+```rust
+code.spotlight(3, 0.6, 80, 24);
+code.spotlight(7, 0.6, 120, 24);
+code.unfocus(170, 12);
+```
+
+## In action
+
+<Video src="tweens" caption="Entrance animations and easing presets." />

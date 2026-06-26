@@ -1,0 +1,43 @@
+---
+title: Languages
+description: Syntax highlighting coverage and how to query the available languages.
+---
+
+CineCode highlights code with [syntect](https://github.com/trishume/syntect),
+giving it Sublime-Text-grade highlighting for roughly **212 languages** out of
+the box.
+
+## Specify a language
+
+Pass a language id as the second argument to `s.code()`:
+
+```rust
+s.code(read("src/main.rs"), "rust", 96, 160);
+s.code(read("src/app.ts"), "typescript", 96, 160);
+s.code(read("src/query.sql"), "sql", 96, 160);
+```
+
+Common ids include `rust`, `python`, `javascript`, `typescript`, `go`, `c`,
+`cpp`, `java`, `ruby`, `php`, `html`, `css`, `json`, `yaml`, `toml`, `bash`,
+`sql`, and `markdown`.
+
+## List what's available
+
+To see the exact set supported by your build:
+
+```bash
+cinecode languages
+```
+
+<Callout type="info">
+  Language ids are case-insensitive and accept common aliases (e.g. `js` for
+  JavaScript). If a language isn't found, the code still renders — just without
+  highlighting.
+</Callout>
+
+## Pairing with themes
+
+Highlighting colors come from the **code highlight theme**, which you can set per
+block. See [Themes](/docs/reference/themes).
+
+<Video src="editor_theme" caption="Syntax highlighting under different themes." />

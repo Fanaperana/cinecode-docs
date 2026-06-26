@@ -1,0 +1,82 @@
+---
+title: Create a project
+description: Scaffold a new CineCode project and understand each part of its layout.
+---
+
+## Goal
+
+Start a new video project with a working scene you can render immediately.
+
+## Scaffold it
+
+```bash
+cinecode new my-video
+```
+
+This creates:
+
+```text
+my-video/
+├── codescene.toml      # manifest: scenes, theme, output settings
+├── scenes/
+│   └── intro.ccs       # a starter scene (Rhai script)
+└── src/
+    └── main.rs         # sample source code shown in the scene
+```
+
+## What each part is for
+
+<TypeTable
+  type={{
+    "codescene.toml": {
+      description: "The manifest. Lists scenes to play and configures the output.",
+      type: "manifest",
+    },
+    "scenes/*.ccs": {
+      description: "Scene scripts. Each file is one scene, written in the Rhai-based .ccs language.",
+      type: "script",
+    },
+    "src/*": {
+      description: "Real source files. Loaded with read() and syntax-highlighted on screen.",
+      type: "source",
+    },
+    "assets/*": {
+      description: "Optional images, audio, and other media referenced by scenes.",
+      type: "media",
+    },
+    "shaders/*.wgsl": {
+      description: "Optional WGSL shaders for the GPU backend.",
+      type: "shader",
+    },
+  }}
+/>
+
+## Add a scene
+
+1. Create `scenes/outro.ccs` with a `scene(...)` call.
+2. Register it in the manifest, in play order:
+
+```toml title="codescene.toml"
+scenes = ["intro", "outro"]
+```
+
+<Callout type="warn">
+  Only scenes listed in `scenes = [...]` are rendered, and they play in the order
+  you list them. A `.ccs` file that isn't listed is ignored.
+</Callout>
+
+## Validate before rendering
+
+```bash
+cinecode check my-video
+```
+
+`check` parses the manifest and every scene script and reports errors without
+rendering — fast feedback while you write.
+
+## Next
+
+<Cards>
+  <Card href="/docs/how-to/render-videos" title="Render videos →" description="Render the whole project, one scene, or a range." />
+  <Card href="/docs/reference/project-manifest" title="Manifest reference" description="Every key in codescene.toml." />
+</Cards>

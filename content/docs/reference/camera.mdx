@@ -1,0 +1,59 @@
+---
+title: Camera
+description: focus_on, move_to, and zoom_to — the camera controls.
+---
+
+Each scene may have one camera, obtained with `s.camera()`. All positions are in
+the scene's pixel space (the output resolution), before the camera transform.
+Timing is in frames.
+
+```rust
+let cam = s.camera();
+```
+
+## `focus_on(node, x, y, zoom, line)`
+
+Frame a node — optionally a specific line of code — at a given zoom level.
+
+```rust
+cam.focus_on(code, 96, 24, 1.7, 2); // push in on line 2 of `code` at 1.7×
+```
+
+| Parameter | Description |
+| --- | --- |
+| `node` | The element to frame. |
+| `x, y` | Anchor offset within/around the node. |
+| `zoom` | Magnification (`1.0` = no zoom). |
+| `line` | Line to center on (1-based); `0` for the whole node. |
+
+## `move_to(x, y, start, dur)`
+
+Pan the camera center to a point.
+
+```rust
+cam.move_to(640, 360, 150, 30); // glide to the center over frames 150–180
+```
+
+## `zoom_to(zoom, start, dur)`
+
+Change magnification.
+
+```rust
+cam.zoom_to(1.0, 150, 30); // ease back to 1×
+```
+
+## Combining moves
+
+Pan and zoom in the same frame window so they read as a single motion, and add
+[easing](/docs/reference/easing) for cinematic accel/decel:
+
+```rust
+let cam = s.camera();
+cam.focus_on(code, 96, 24, 1.7, 2);
+cam.move_to(640, 360, 150, 30);
+cam.zoom_to(1.0, 150, 30);
+```
+
+<Video src="intro" caption="A camera push-in and pull-back." />
+
+See also: [Add camera moves](/docs/how-to/add-camera-moves).

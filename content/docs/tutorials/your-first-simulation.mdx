@@ -1,0 +1,90 @@
+---
+title: Your first simulation
+description: Bring a living terrain diagram to life beside its code, and bind the two together.
+---
+
+CineCode's superpower is the **living diagram**: an algorithm that runs on
+screen, in sync with the code that describes it. In this lesson you'll add a
+procedurally generated terrain and link it to a line of code.
+
+## Step 1 — Add a simulation
+
+Simulations are scene elements, just like text and code. Create a new scene
+`scenes/terrain.ccs`:
+
+```rust title="scenes/terrain.ccs"
+let s = scene("Generating Terrain", 180);
+
+s.text("Procedural terrain", 96, 64).font_size(48).fade_in(0, 16);
+
+// A terrain heightmap, positioned on the right half of the frame
+let t = s.terrain(680, 160);
+t.seed(7).frequency(3.0).octaves(4).cells(48, 32).mode("heightmap");
+
+// Reveal it growing in over frames 10–60
+t.reveal(10, 50);
+```
+
+Then register the scene in your manifest:
+
+```toml title="codescene.toml"
+scenes = ["intro", "terrain"]
+```
+
+Render and you'll see the terrain build itself:
+
+<Video src="terrain" caption="A seeded terrain heightmap, revealed over time." />
+
+## Step 2 — Show the code beside it
+
+A diagram is more powerful next to the code that produces it. Add a code block
+on the left:
+
+```rust title="scenes/terrain.ccs"
+let code = s.code(read("src/terrain.rs"), "rust", 96, 160);
+code.font_size(34).fade_in(0, 14).typewriter(6, 70);
+
+let t = s.terrain(680, 160);
+t.seed(7).frequency(3.0).octaves(4).cells(48, 32).mode("heightmap");
+t.reveal(80, 40);
+```
+
+## Step 3 — Bind code to the simulation
+
+Now the magic. `s.link(code, line, sim, start, dur)` ties a **line of code** to
+the simulation, so when that line is active the diagram responds:
+
+```rust
+// When line 4 (the noise call) is reached, drive the terrain
+s.link(code, 4, t, 90, 60);
+```
+
+This is the same mechanism the example uses across all six simulation types:
+
+<VideoGrid>
+  <Video src="terrain" caption="Terrain — heightmaps & heatmaps" />
+  <Video src="pathfind" caption="A* pathfinding on a grid" />
+</VideoGrid>
+
+## Step 4 — Try the other simulations
+
+Every simulation is configured the same way — create it, set parameters with a
+fluent chain, then `reveal` or `run` it. Swap `s.terrain(...)` for any of:
+
+- `s.pathfind(...)` — A* search on a grid
+- `s.particles(...)` — particle streams
+- `s.graph(...)` — graph traversal (BFS/DFS)
+- `s.life(...)` — Conway's Game of Life
+- `s.boids(...)` — flocking
+
+The full parameter list for each lives in
+[Simulations reference](/docs/reference/simulations).
+
+## You did it
+
+You have a living diagram bound to its code. Next, you'll combine everything
+into a polished, multi-scene documentary.
+
+<Cards>
+  <Card href="/docs/tutorials/a-complete-documentary" title="Next: A complete documentary →" description="Transitions, camera moves, audio, and a final render." />
+</Cards>

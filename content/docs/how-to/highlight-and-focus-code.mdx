@@ -1,0 +1,88 @@
+---
+title: Highlight and focus code
+description: Spotlight lines, dim others, underline, surround, and point at code to direct attention.
+---
+
+## Goal
+
+Direct the viewer's eye to exactly the right part of a code block.
+
+All of these methods are called on a code node returned by `s.code(...)`, and
+all line numbers are **1-based**.
+
+## Spotlight a line
+
+Raise one line to full brightness and dim the rest:
+
+```rust
+let code = s.code(read("src/main.rs"), "rust", 96, 160);
+code.fade_in(0, 12).typewriter(6, 60);
+
+code.spotlight(3, 0.6, 80, 24); // focus line 3, dim others by 0.6
+```
+
+Call it again to walk focus down the block — each call animates from the last:
+
+```rust
+code.spotlight(3, 0.6, 80, 24);
+code.spotlight(7, 0.6, 120, 24);
+code.unfocus(170, 12); // release everyone
+```
+
+## Highlight without dimming
+
+To brighten a line without dimming the others:
+
+```rust
+code.highlight_line(5, 90, 16);
+```
+
+Or invert it — dim everything *except* a line:
+
+```rust
+code.dim_others(5, 0.5, 90, 16);
+```
+
+## Underline a line
+
+```rust
+s.underline(code, 4, 100, 20); // animate an underline under line 4
+```
+
+## Surround a range of lines
+
+Draw an animated box around lines `from`–`to`:
+
+```rust
+s.surround(code, 2, 5, 100, 24);
+```
+
+## Point at a line
+
+Drop an arrow that points at a line from a screen position:
+
+```rust
+// point_at(code, line, from_x, from_y, start, dur)
+s.point_at(code, 6, 760, 300, 120, 20);
+```
+
+## Putting it together
+
+A typical walkthrough types the code, then choreographs focus over it:
+
+```rust
+let code = s.code(read("src/main.rs"), "rust", 96, 160);
+code.font_size(36).fade_in(0, 12).typewriter(6, 70);
+
+s.surround(code, 1, 3, 90, 20);     // box the signature
+code.spotlight(2, 0.6, 120, 24);    // focus the key line
+s.point_at(code, 2, 760, 320, 150, 18);
+code.unfocus(200, 14);
+```
+
+<Video src="inserts" caption="Focus and insert animations guiding the eye through code." />
+
+## Reference
+
+The complete list of focus, style, and shape methods on a node is in
+[Code & node animations](/docs/reference/code-animations).
