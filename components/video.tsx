@@ -1,4 +1,5 @@
 import { cn } from '@/lib/cn';
+import { withBasePath } from '@/lib/shared';
 
 export interface VideoProps {
   /**
@@ -26,14 +27,15 @@ function baseName(src: string): string {
 }
 
 function resolveVideo(src: string): string {
-  if (src.startsWith('http') || src.startsWith('/')) return src;
-  return `/videos/${src}.mp4`;
+  if (src.startsWith('http')) return src;
+  if (src.startsWith('/')) return withBasePath(src);
+  return withBasePath(`/videos/${src}.mp4`);
 }
 
 function resolvePoster(src: string, poster?: string): string | undefined {
-  if (poster) return poster;
+  if (poster) return poster.startsWith('http') ? poster : withBasePath(poster);
   if (src.startsWith('http')) return undefined;
-  return `/videos/posters/${baseName(src)}.jpg`;
+  return withBasePath(`/videos/posters/${baseName(src)}.jpg`);
 }
 
 /**
