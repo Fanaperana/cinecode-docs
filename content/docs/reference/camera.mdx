@@ -5,7 +5,7 @@ description: focus_on, move_to, and zoom_to — the camera controls.
 
 Each scene may have one camera, obtained with `s.camera()`. All positions are in
 the scene's pixel space (the output resolution), before the camera transform.
-Timing is in frames.
+Timing accepts raw frames or helpers such as `ms(500)` and `sec(2)`.
 
 ```rust
 let cam = s.camera();
@@ -31,7 +31,7 @@ cam.focus_on(code, 96, 24, 1.7, 2); // push in on line 2 of `code` at 1.7×
 Pan the camera center to a point.
 
 ```rust
-cam.move_to(640, 360, 150, 30); // glide to the center over frames 150–180
+cam.move_to(640, 360, sec(5), sec(1)); // glide to center over one second
 ```
 
 ## `zoom_to(zoom, start, dur)`
@@ -39,7 +39,7 @@ cam.move_to(640, 360, 150, 30); // glide to the center over frames 150–180
 Change magnification.
 
 ```rust
-cam.zoom_to(1.0, 150, 30); // ease back to 1×
+cam.zoom_to(1.0, sec(5), sec(1)); // ease back to 1×
 ```
 
 ## Combining moves
@@ -50,8 +50,8 @@ Pan and zoom in the same frame window so they read as a single motion, and add
 ```rust
 let cam = s.camera();
 cam.focus_on(code, 96, 24, 1.7, 2);
-cam.move_to(640, 360, 150, 30);
-cam.zoom_to(1.0, 150, 30);
+cam.move_to(640, 360, sec(5), sec(1));
+cam.zoom_to(1.0, sec(5), sec(1));
 ```
 
 <Video src="intro" caption="A camera push-in and pull-back." />

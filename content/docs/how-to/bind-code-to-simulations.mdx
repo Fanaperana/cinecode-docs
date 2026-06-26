@@ -17,7 +17,8 @@ s.link(code, line, sim, start, dur);
 - `code` — a node from `s.code(...)`
 - `line` — the 1-based line that drives the simulation
 - `sim` — a simulation node (`s.terrain(...)`, `s.pathfind(...)`, …)
-- `start`, `dur` — when the linked animation plays, in frames
+- `start`, `dur` — when the linked animation plays, as frames or helpers such as
+  `sec(3)` / `ms(900)`
 
 ## A worked example
 
@@ -25,16 +26,16 @@ Show a pathfinding algorithm next to its code, and drive the search from the
 line that calls it:
 
 ```rust
-let s = scene("A* Pathfinding", 220);
+let s = scene("A* Pathfinding", sec(7.33));
 
 let code = s.code(read("src/astar.rs"), "rust", 96, 160);
-code.font_size(30).fade_in(0, 12).typewriter(6, 80);
+code.font_size(30).fade_in(0, ms(400)).typewriter(ms(200), ms(2667));
 
 let grid = s.pathfind(700, 150);
 grid.seed(11).cells(24, 18).wall_density(0.28);
 
 // When line 9 (the search call) is reached, run the search beside it
-s.link(code, 9, grid, 100, 90);
+s.link(code, 9, grid, sec(3.33), sec(3));
 ```
 
 <Video src="pathfind" caption="A* search bound to the line of code that launches it." />

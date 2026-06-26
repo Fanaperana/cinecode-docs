@@ -9,11 +9,16 @@ methods that you chain onto the returned nodes are documented in
 
 ## `scene(name, frames)`
 
-Declare a scene and its duration in frames.
+Declare a scene and its duration. Use raw frames for precision, or time helpers
+for readability.
 
 ```rust
-let s = scene("Introduction", 180);
+let s = scene("Introduction", sec(6));
+let quick = scene("Title card", ms(2500));
 ```
+
+`ms(n)` converts milliseconds to frames. `sec(n)`, `secs(n)`, `seconds(n)`, and
+`s(n)` convert seconds to frames using `[output].fps` from `codescene.toml`.
 
 ## Text
 
@@ -68,13 +73,13 @@ These act on a code/text node:
 
 ```rust
 // underline(node, line, start, dur)
-s.underline(code, 3, 100, 20);
+s.underline(code, 3, sec(3), ms(667));
 
 // surround(node, from_line, to_line, start, dur)
-s.surround(code, 1, 4, 100, 24);
+s.surround(code, 1, 4, sec(3), ms(800));
 
 // point_at(node, line, from_x, from_y, start, dur)
-s.point_at(code, 5, 760, 320, 120, 18);
+s.point_at(code, 5, 760, 320, sec(4), ms(600));
 ```
 
 ## Morph
@@ -119,8 +124,8 @@ See [Camera](/docs/reference/camera).
 
 ```rust
 // transition(kind, frames, [r, g, b])
-s.transition("crossfade", 18);
-s.transition("fade_color", 24, 8, 10, 20);
+s.transition("crossfade", ms(600));
+s.transition("fade_color", ms(800), 8, 10, 20);
 ```
 
 See [Transitions](/docs/reference/transitions).

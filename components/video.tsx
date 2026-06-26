@@ -67,17 +67,17 @@ height = 720`,
         path: 'scenes/intro.ccs',
         role: 'The storyboard: create a scene, read `src/main.rs`, animate it, and move the camera.',
         language: 'rust',
-        code: `let s = scene("Intro", 150);
+        code: `let s = scene("Intro", sec(5));
 
-s.text("Hello, CineCode", 96, 48).font_size(52).glow(0.5).fade_in(0, 18);
+      s.text("Hello, CineCode", 96, 48).font_size(52).glow(0.5).fade_in(0, ms(600));
 
 let code = s.code(read("src/main.rs"), "rust", 96, 150);
-code.font_size(34).shadow(0.5).fade_in(0, 16).typewriter(6, 70);
-code.spotlight(2, 0.6, 90, 18);
+      code.font_size(34).shadow(0.5).fade_in(0, ms(533)).typewriter(ms(200), ms(2333));
+      code.spotlight(2, 0.6, sec(3), ms(600));
 
 let cam = s.camera();
 cam.focus_on(code, 96, 24, 1.6, 2);
-cam.zoom_to(1, 130, 24);`,
+      cam.zoom_to(1, ms(4333), ms(800));`,
       },
       {
         path: 'src/main.rs',
@@ -98,11 +98,11 @@ cam.zoom_to(1, 130, 24);`,
         path: 'scenes/intro.ccs',
         role: 'Creates one text node and fades it in.',
         language: 'rust',
-        code: `let s = scene("Title", 120);
+        code: `let s = scene("Title", sec(4));
 
 s.text("Hello, CineCode", 96, 80)
     .font_size(56)
-    .fade_in(0, 18);`,
+      .fade_in(0, ms(600));`,
       },
     ],
   },
@@ -114,13 +114,13 @@ s.text("Hello, CineCode", 96, 80)
         path: 'scenes/intro.ccs',
         role: 'Styles the title with a font, glow, size, and entrance motion.',
         language: 'rust',
-        code: `let s = scene("Styled Title", 120);
+        code: `let s = scene("Styled Title", sec(4));
 
 s.text("Hello, CineCode", 96, 80)
     .font("Georgia")
     .font_size(64)
     .glow(0.5)
-    .slide_in("up", 50, 0, 24);`,
+      .slide_in("up", 50, 0, ms(800));`,
       },
     ],
   },
@@ -132,18 +132,18 @@ s.text("Hello, CineCode", 96, 80)
         path: 'scenes/intro.ccs',
         role: 'Adds a code node that reads, highlights, shadows, fades, and types `src/main.rs`.',
         language: 'rust',
-        code: `let s = scene("Code", 150);
+        code: `let s = scene("Code", sec(5));
 
 s.text("Hello, CineCode", 96, 48)
     .font_size(52)
     .glow(0.5)
-    .fade_in(0, 18);
+      .fade_in(0, ms(600));
 
 let code = s.code(read("src/main.rs"), "rust", 96, 150);
 code.font_size(34)
     .shadow(0.5)
-    .fade_in(0, 16)
-    .typewriter(6, 70);`,
+      .fade_in(0, ms(533))
+      .typewriter(ms(200), ms(2333));`,
       },
       {
         path: 'src/main.rs',

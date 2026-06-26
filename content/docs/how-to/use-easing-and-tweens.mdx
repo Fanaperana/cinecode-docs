@@ -15,7 +15,7 @@ immediately after an animation to **retarget the previous animation** with a
 curve:
 
 ```rust
-code.slide_up(0, 30).ease(CUBIC, EASE_OUT);
+code.slide_up(0, sec(1)).ease(CUBIC, EASE_OUT);
 ```
 
 ## Equations and modes
@@ -53,7 +53,7 @@ consistent feel:
 let snappy = ease(BACK, EASE_OUT);
 
 title.slide_up(0, 24).ease(snappy);
-code.fade_in(6, 20).ease(snappy);
+code.fade_in(ms(200), ms(667)).ease(snappy);
 ```
 
 ## Delay before an animation
@@ -61,7 +61,7 @@ code.fade_in(6, 20).ease(snappy);
 Offset an animation in time without changing its curve:
 
 ```rust
-code.fade_in(0, 20).delay(15); // wait 15 frames, then fade in
+code.fade_in(0, ms(667)).delay(ms(500)); // wait half a second, then fade in
 ```
 
 ## Recommended pairings

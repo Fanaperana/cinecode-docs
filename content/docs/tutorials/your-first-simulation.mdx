@@ -21,8 +21,8 @@ s.text("Procedural terrain", 96, 64).font_size(48).fade_in(0, 16);
 let t = s.terrain(680, 160);
 t.seed(7).frequency(3.0).octaves(4).cells(48, 32).mode("heightmap");
 
-// Reveal it growing in over frames 10–60
-t.reveal(10, 50);
+// Reveal it growing in, starting after the first third of a second
+t.reveal(ms(333), sec(1.67));
 ```
 
 Then register the scene in your manifest:

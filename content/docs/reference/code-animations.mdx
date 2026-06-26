@@ -5,7 +5,8 @@ description: Every animation, style, focus, and shape method you can chain onto 
 
 Builders like `s.text(...)`, `s.code(...)`, and the shape constructors return a
 **node**. You configure a node by chaining the methods below. Methods that take
-`start, dur` are timed in frames; line numbers are **1-based**.
+`start, dur` accept raw frames or time helpers (`ms(500)`, `sec(2)`, `s(2)`);
+line numbers are **1-based**.
 
 ## Entrance animations
 
@@ -58,7 +59,7 @@ See [Edit code live](/docs/how-to/edit-code-live).
 | `delay(frames)` | Offset the previous animation in time. |
 
 ```rust
-code.slide_up(0, 24).ease(CUBIC, EASE_OUT).delay(10);
+code.slide_up(0, ms(800)).ease(CUBIC, EASE_OUT).delay(ms(333));
 ```
 
 See [Easing](/docs/reference/easing).

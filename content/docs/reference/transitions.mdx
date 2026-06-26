@@ -5,7 +5,8 @@ description: Transition kinds between scenes — cut, crossfade, fade_color, wip
 
 Transitions smooth the cut between scenes. Set a default in the
 [manifest](/docs/reference/project-manifest#transition), or call
-`s.transition(kind, frames, [r, g, b])` inside a scene.
+`s.transition(kind, duration, [r, g, b])` inside a scene. Scene transitions
+accept raw frames or helpers like `ms(600)`.
 
 ```toml title="codescene.toml"
 [transition]
@@ -14,7 +15,7 @@ frames = 18
 ```
 
 ```rust title="inside a scene"
-s.transition("fade_color", 24, 8, 10, 20); // dip through a dark navy
+s.transition("fade_color", ms(800), 8, 10, 20); // dip through a dark navy
 ```
 
 ## Kinds
@@ -38,7 +39,7 @@ s.transition("fade_color", 24, 8, 10, 20); // dip through a dark navy
 | Parameter | Description |
 | --- | --- |
 | `kind` | One of the kinds above. |
-| `frames` | Duration of the transition. |
+| `frames` | Duration of the transition, as raw frames or `ms(...)` / `sec(...)`. |
 | `r, g, b` | Color for `fade_color` (defaults to black). |
 
 ## Choosing a transition
@@ -49,5 +50,6 @@ s.transition("fade_color", 24, 8, 10, 20); // dip through a dark navy
 - **`wipe_*`** is bolder; use sparingly.
 
 <Callout type="info">
-  In the example project, all 17 scenes are joined with an 18-frame `crossfade`.
+  In the example project, all 17 scenes are joined with an 18-frame `crossfade`,
+  which is the same as `ms(600)` at 30 fps.
 </Callout>

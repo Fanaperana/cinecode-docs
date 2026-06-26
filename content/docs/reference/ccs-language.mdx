@@ -11,7 +11,9 @@ exposes a set of global functions and a fluent, chainable builder API.
 - **One file, one scene.** A `.ccs` file should call `scene(...)` once.
 - **Coordinates** are pixels from the top-left, in the output's resolution,
   before the camera transform.
-- **Time** is measured in frames. At 30 fps, 30 frames = 1 second.
+- **Time** accepts raw frames or helpers. `ms(500)` is half a second,
+  `sec(2)` is two seconds, and `s(2)` is a short alias. Conversion uses the
+  project's `[output].fps`.
 - **Line numbers** passed to focus/highlight methods are **1-based**.
 - **Colors** are `r, g, b` (and sometimes `a`) integers in `0–255`.
 
@@ -21,10 +23,12 @@ exposes a set of global functions and a fluent, chainable builder API.
 | --- | --- | --- |
 | `scene(name, frames)` | scene | Declare the scene and its duration. |
 | `read(path)` | string | Read a file (relative to the project) as text. |
+| `ms(n)` / `millis(n)` / `milliseconds(n)` | number | Convert milliseconds to frames. |
+| `sec(n)` / `secs(n)` / `seconds(n)` / `s(n)` | number | Convert seconds to frames. |
 | `ease(equation, mode)` | easing | Build a reusable easing curve. |
 
 ```rust
-let s = scene("Introduction", 180);
+let s = scene("Introduction", sec(6));
 let source = read("src/main.rs");
 let snappy = ease(BACK, EASE_OUT);
 ```
@@ -34,13 +38,13 @@ let snappy = ease(BACK, EASE_OUT);
 Everything on a scene is created through `s.*` and configured by chaining:
 
 ```rust
-let s = scene("Demo", 120);
+let s = scene("Demo", sec(4));
 
 s.text("Title", 96, 64)     // create a node…
   .font_size(48)            // …style it…
   .glow(0.5)
-  .fade_in(0, 16)           // …and animate it
-  .slide_up(0, 16).ease(CUBIC, EASE_OUT);
+  .fade_in(0, ms(533))      // …and animate it
+  .slide_up(0, ms(533)).ease(CUBIC, EASE_OUT);
 ```
 
 Each builder call returns the node (or scene) so chains read top-to-bottom.

@@ -71,31 +71,31 @@ The script is the storyboard. `read("src/main.rs")` pulls in the code from the
 other tab, and the chained calls say *how* to animate it.
 
 ```rust title="scenes/intro.ccs"
-// scene(name, duration_in_frames) — at 30 fps, 150 frames = 5 seconds
-let s = scene("Intro", 150);
+// scene(name, duration) — sec(5) becomes 150 frames at 30 fps
+let s = scene("Intro", sec(5));
 
 // A title that fades in, with a soft glow
-s.text("Hello, CineCode", 96, 48).font_size(52).glow(0.5).fade_in(0, 18);
+s.text("Hello, CineCode", 96, 48).font_size(52).glow(0.5).fade_in(0, ms(600));
 
 // Load src/main.rs and type it out like a keyboard
 let code = s.code(read("src/main.rs"), "rust", 96, 150);
-code.font_size(34).shadow(0.5).fade_in(0, 16).typewriter(6, 70);
-code.spotlight(2, 0.6, 90, 18);   // at frame 90, brighten line 2, dim the rest
+code.font_size(34).shadow(0.5).fade_in(0, ms(533)).typewriter(ms(200), ms(2333));
+code.spotlight(2, 0.6, sec(3), ms(600)); // at 3s, brighten line 2, dim the rest
 
 // A documentary camera that pushes in on line 2, then pulls back
 let cam = s.camera();
 cam.focus_on(code, 96, 24, 1.6, 2);
-cam.zoom_to(1, 130, 24);
+cam.zoom_to(1, ms(4333), ms(800));
 ```
 
 What each line does:
 
-- `scene("Intro", 150)` — a 150-frame (5-second) scene.
-- `s.text(...)` — a title at pixel `(96, 48)`, faded in over frames 0–18.
+- `scene("Intro", sec(5))` — a 5-second scene.
+- `s.text(...)` — a title at pixel `(96, 48)`, faded in over 600 ms.
 - `s.code(read("src/main.rs"), "rust", ...)` — loads and syntax-highlights your
   real code.
-- `.typewriter(6, 70)` — types it out, starting at frame 6, over 70 frames.
-- `.spotlight(2, 0.6, 90, 18)` — at frame 90, brightens line 2 and dims the rest.
+- `.typewriter(ms(200), ms(2333))` — types it out after 200 ms.
+- `.spotlight(2, 0.6, sec(3), ms(600))` — at 3 seconds, brightens line 2 and dims the rest.
 
 </Tab>
 
@@ -130,11 +130,11 @@ height = 720
 Open `scenes/intro.ccs` and temporarily reduce it to only a title:
 
 ```rust title="scenes/intro.ccs"
-let s = scene("Intro", 120);
+let s = scene("Intro", sec(4));
 
 s.text("Hello, CineCode", 96, 80)
     .font_size(56)
-    .fade_in(0, 18);
+  .fade_in(0, ms(600));
 ```
 
 Render it:
@@ -147,10 +147,10 @@ Render it:
 
 What you just learned:
 
-- `scene("Intro", 120)` creates a 120-frame scene. At 30 fps, that is 4 seconds.
+- `scene("Intro", sec(4))` creates a 4-second scene.
 - `s.text(...)` places text at `(x, y)` pixels from the top-left.
 - `.font_size(56)` makes it large enough to read.
-- `.fade_in(0, 18)` fades it in from frame 0 to frame 18.
+- `.fade_in(0, ms(600))` fades it in over the first 600 ms.
 
 This is the first useful CineCode unit: **create a node, then chain animation
 methods onto it**.
@@ -160,13 +160,13 @@ methods onto it**.
 Now make the title feel more intentional. Replace the title block with this:
 
 ```rust title="scenes/intro.ccs"
-let s = scene("Intro", 120);
+let s = scene("Intro", sec(4));
 
 s.text("Hello, CineCode", 96, 80)
     .font("Georgia")
     .font_size(64)
     .glow(0.5)
-    .slide_in("up", 50, 0, 24);
+  .slide_in("up", 50, 0, ms(800));
 ```
 
 Render again:
@@ -181,8 +181,8 @@ What changed:
 
 - `.font("Georgia")` asks for a system font by name.
 - `.glow(0.5)` adds a soft documentary-style glow.
-- `.slide_in("up", 50, 0, 24)` starts the title 50 pixels lower and slides it
-  upward over 24 frames.
+- `.slide_in("up", 50, 0, ms(800))` starts the title 50 pixels lower and slides
+  it upward over 800 ms.
 
 Later, when you want to compare more fonts, the example project includes a full
 font gallery:
@@ -195,18 +195,18 @@ Put the starter scene back together, but read it from the bottom up: title first
 then code.
 
 ```rust title="scenes/intro.ccs"
-let s = scene("Intro", 150);
+let s = scene("Intro", sec(5));
 
 s.text("Hello, CineCode", 96, 48)
     .font_size(52)
     .glow(0.5)
-    .fade_in(0, 18);
+  .fade_in(0, ms(600));
 
 let code = s.code(read("src/main.rs"), "rust", 96, 150);
 code.font_size(34)
     .shadow(0.5)
-    .fade_in(0, 16)
-    .typewriter(6, 70);
+  .fade_in(0, ms(533))
+  .typewriter(ms(200), ms(2333));
 ```
 
 Render this checkpoint:
@@ -222,7 +222,8 @@ Now there are two different node types in one scene:
 - `s.text(...)` creates normal title text.
 - `s.code(read("src/main.rs"), "rust", ...)` reads a real file, syntax
   highlights it as Rust, and places it on screen.
-- `.typewriter(6, 70)` reveals the code like typing, starting at frame 6.
+- `.typewriter(ms(200), ms(2333))` reveals the code like typing, starting after
+  200 ms.
 
 The clip above is the first point where the scene starts to feel like a code
 documentary: the page title gives context, while the code block gives the thing
@@ -234,18 +235,18 @@ Code on screen is useful, but documentary code needs direction. Add a spotlight
 after the typewriter:
 
 ```rust title="scenes/intro.ccs"
-code.spotlight(2, 0.6, 90, 18);
+code.spotlight(2, 0.6, sec(3), ms(600));
 ```
 
-That means: at frame 90, brighten line 2 and dim the other lines by `0.6` over
-18 frames.
+That means: at 3 seconds, brighten line 2 and dim the other lines by `0.6` over
+600 ms.
 
 Then add a camera move:
 
 ```rust title="scenes/intro.ccs"
 let cam = s.camera();
 cam.focus_on(code, 96, 24, 1.6, 2);
-cam.zoom_to(1, 130, 24);
+cam.zoom_to(1, ms(4333), ms(800));
 ```
 
 Render again:

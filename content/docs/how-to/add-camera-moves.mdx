@@ -32,14 +32,14 @@ cam.focus_on(code, 96, 24, 1.7, 2); // push in on line 2 of `code`
 
 ```rust
 // move_to(x, y, start, dur)
-cam.move_to(640, 360, 150, 30); // glide to centre over frames 150–180
+cam.move_to(640, 360, sec(5), sec(1)); // glide to centre over one second
 ```
 
 ## Zoom
 
 ```rust
 // zoom_to(zoom, start, dur)
-cam.zoom_to(1.0, 150, 30); // ease back to 1× while panning
+cam.zoom_to(1.0, sec(5), sec(1)); // ease back to 1× while panning
 ```
 
 ## A complete camera arc
@@ -47,21 +47,21 @@ cam.zoom_to(1.0, 150, 30); // ease back to 1× while panning
 Push in on the code, hold, then pull back to reveal the whole scene:
 
 ```rust
-let s = scene("Introduction", 180);
+let s = scene("Introduction", sec(6));
 let code = s.code(read("src/main.rs"), "rust", 96, 160);
-code.fade_in(0, 18).typewriter(8, 70);
+code.fade_in(0, ms(600)).typewriter(ms(267), ms(2333));
 
 let cam = s.camera();
 cam.focus_on(code, 96, 24, 1.7, 2);  // open tight on line 2
-cam.move_to(640, 360, 150, 30);       // pull back…
-cam.zoom_to(1.0, 150, 30);            // …and zoom out together
+cam.move_to(640, 360, sec(5), sec(1)); // pull back…
+cam.zoom_to(1.0, sec(5), sec(1));      // …and zoom out together
 ```
 
 <Video src="intro" caption="A camera push-in and pull-back over typing code." />
 
 ## Tips
 
-- Move and zoom in the **same frame window** so they feel like one motion.
+- Move and zoom in the **same time window** so they feel like one motion.
 - Combine with [easing](/docs/how-to/use-easing-and-tweens) for cinematic accel/decel.
 - Keep moves slow and purposeful — a documentary camera rarely hurries.
 
