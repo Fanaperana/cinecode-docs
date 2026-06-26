@@ -1,5 +1,6 @@
 import { cn } from '@/lib/cn';
 import { withBasePath } from '@/lib/shared';
+import { SourceBundleTabs } from './source-preview';
 
 interface SourceFile {
   path: string;
@@ -15,6 +16,8 @@ interface SourceBundle {
 
 const exampleBaseUrl =
   'https://github.com/Fanaperana/cinecode/tree/main/examples/rivers-project';
+const exampleRawBaseUrl =
+  'https://raw.githubusercontent.com/Fanaperana/cinecode/main/examples/rivers-project';
 
 const manifestFile: SourceFile = {
   path: 'codescene.toml',
@@ -416,6 +419,10 @@ function exampleFileUrl(path: string): string {
   return `${exampleBaseUrl}/${path}`;
 }
 
+function exampleRawFileUrl(path: string): string {
+  return `${exampleRawBaseUrl}/${path}`;
+}
+
 function resolveVideo(src: string): string {
   if (src.startsWith('http')) return src;
   if (src.startsWith('/')) return withBasePath(src);
@@ -478,26 +485,13 @@ function SourceBundleDetails({ bundle }: { bundle: SourceBundle }) {
         Files that made this video
       </summary>
       <p className="mt-3 text-fd-muted-foreground">{bundle.summary}</p>
-      <ul className="mt-3 space-y-2">
-        {bundle.files.map((file) => (
-          <li key={file.path}>
-            <a
-              className="font-mono text-fd-primary underline underline-offset-4"
-              href={exampleFileUrl(file.path)}
-              target="_blank"
-              rel="noreferrer"
-            >
-              {file.path}
-            </a>
-            <span className="text-fd-muted-foreground"> - {file.role}</span>
-            {file.code ? (
-              <pre className="mt-2 overflow-x-auto rounded-md border border-fd-border bg-fd-muted/40 p-3 text-xs leading-5">
-                <code>{file.code}</code>
-              </pre>
-            ) : null}
-          </li>
-        ))}
-      </ul>
+      <SourceBundleTabs
+        files={bundle.files.map((file) => ({
+          ...file,
+          url: exampleFileUrl(file.path),
+          rawUrl: exampleRawFileUrl(file.path),
+        }))}
+      />
     </details>
   );
 }
