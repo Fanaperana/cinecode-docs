@@ -87,6 +87,72 @@ cam.zoom_to(1, 130, 24);`,
       },
     ],
   },
+  'first-video-title': {
+    summary: 'The first checkpoint in the beginner tutorial: a manifest plus a title-only scene script.',
+    files: [
+      starterManifest('Renders only the title checkpoint scene.'),
+      {
+        path: 'scenes/intro.ccs',
+        role: 'Creates one text node and fades it in.',
+        language: 'rust',
+        code: `let s = scene("Title", 120);
+
+s.text("Hello, CineCode", 96, 80)
+    .font_size(56)
+    .fade_in(0, 18);`,
+      },
+    ],
+  },
+  'first-video-title-styled': {
+    summary: 'The second beginner checkpoint: the same title with a font, glow, and slide-in animation.',
+    files: [
+      starterManifest('Renders only the styled-title checkpoint scene.'),
+      {
+        path: 'scenes/intro.ccs',
+        role: 'Styles the title with a font, glow, size, and entrance motion.',
+        language: 'rust',
+        code: `let s = scene("Styled Title", 120);
+
+s.text("Hello, CineCode", 96, 80)
+    .font("Georgia")
+    .font_size(64)
+    .glow(0.5)
+    .slide_in("up", 50, 0, 24);`,
+      },
+    ],
+  },
+  'first-video-code': {
+    summary: 'The third beginner checkpoint: title plus real Rust source code read from `src/main.rs`.',
+    files: [
+      starterManifest('Renders only the title-plus-code checkpoint scene.'),
+      {
+        path: 'scenes/intro.ccs',
+        role: 'Adds a code node that reads, highlights, shadows, fades, and types `src/main.rs`.',
+        language: 'rust',
+        code: `let s = scene("Code", 150);
+
+s.text("Hello, CineCode", 96, 48)
+    .font_size(52)
+    .glow(0.5)
+    .fade_in(0, 18);
+
+let code = s.code(read("src/main.rs"), "rust", 96, 150);
+code.font_size(34)
+    .shadow(0.5)
+    .fade_in(0, 16)
+    .typewriter(6, 70);`,
+      },
+      {
+        path: 'src/main.rs',
+        role: 'The real source file being read and typed on screen.',
+        language: 'rust',
+        code: `fn main() {
+    let greeting = "Hello, CineCode!";
+    println!("{greeting}");
+}`,
+      },
+    ],
+  },
   spotlight: {
     summary: 'A small tutorial project: `src/main.rs` is typed, then the script spotlights line 2 and line 3.',
     files: [
@@ -249,6 +315,24 @@ fn main() {
 
 function scene(name: string, role: string): SourceFile {
   return { path: `scenes/${name}.ccs`, role, language: 'rust' };
+}
+
+function starterManifest(role: string): SourceFile {
+  return {
+    path: 'codescene.toml',
+    role,
+    language: 'toml',
+    code: `scenes = ["scenes/intro.ccs"]
+theme = "dark_documentary"
+
+[episode]
+title = "my-video"
+
+[output]
+fps = 30
+width = 1280
+height = 720`,
+  };
 }
 
 function rustSource(name: string, role: string, code?: string): SourceFile {
