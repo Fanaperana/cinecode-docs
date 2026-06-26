@@ -24,6 +24,35 @@ example.
   <Card title="Living diagrams" description="Terrain, A*, particles, graphs, Game of Life, and boids — all bound to code." />
 </Cards>
 
+## How it works — three ingredients
+
+Every CineCode project is just **three things working together**. Once this
+clicks, everything else is detail:
+
+<Mermaid
+  chart={`flowchart LR
+    A["③ src/main.rs<br/>your real code"] --> C{"cinecode render"}
+    B["② scenes/intro.ccs<br/>the director's script"] --> C
+    E["① codescene.toml<br/>settings"] --> C
+    C --> D["🎬 my-video.mp4<br/>the finished film"]`}
+/>
+
+- **Your code** (`src/main.rs`, or any file) is the *subject*. CineCode never
+  rewrites it — it films it.
+- **The script** (`*.ccs`) is the *storyboard*. It `read(...)`s your code and
+  says how to type, spotlight, and move the camera over it.
+- **The manifest** (`codescene.toml`) picks the theme, size, and which scenes
+  play.
+
+The key idea: the script never *contains* your code. It points at it.
+
+```rust
+// the .ccs script reads your real file...
+let code = s.code(read("src/main.rs"), "rust", 96, 150);
+// ...then says how to animate it
+code.typewriter(6, 70).spotlight(2, 0.6, 90, 18);
+```
+
 ## Find your way around
 
 This documentation follows the [Diátaxis](https://diataxis.fr) framework. The
@@ -49,7 +78,16 @@ my-video/
     └── main.rs         # the real code you want to show
 ```
 
-A scene script reads like a storyboard:
+First, the code you want to show — an ordinary source file:
+
+```rust title="src/main.rs"
+fn main() {
+    let greeting = "Hello, CineCode!";
+    println!("{greeting}");
+}
+```
+
+A scene script then reads it like a storyboard (notice `read("src/main.rs")`):
 
 ```rust title="scenes/intro.ccs"
 let s = scene("Introduction", 180);

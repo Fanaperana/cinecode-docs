@@ -14,33 +14,92 @@ The `new` command creates a ready-to-render project:
 ./target/release/cinecode new my-video
 ```
 
-That gives you:
+That gives you exactly three files — and **those three files are the whole idea**
+behind CineCode:
 
 ```text
 my-video/
-├── codescene.toml      # the manifest
+├── codescene.toml      # ① the manifest — settings & which scenes to play
 ├── scenes/
-│   └── intro.ccs       # one starter scene
+│   └── intro.ccs       # ② the director's script — how to film the code
 └── src/
-    └── main.rs         # sample code to show
+    └── main.rs         # ③ your code — the thing being filmed
 ```
 
-Render it as-is to confirm the scaffold works:
+<Callout type="info">
+  Think of it like a film set: `src/main.rs` is the **actor** (your real code),
+  `intro.ccs` is the **director** (telling the camera what to do), and the
+  rendered `.mp4` is the **finished film**. The script never *contains* your
+  code — it `read(...)`s it.
+</Callout>
 
-```bash
-./target/release/cinecode render my-video -o my-video.mp4
+## Step 2 — Meet the three files
+
+Open the project and look at each file. The most important thing to notice: the
+script doesn't hold the code, it **reads** `src/main.rs` and then says *how* to
+animate it.
+
+<Tabs items={['③ src/main.rs — your code', '② scenes/intro.ccs — the script', '① codescene.toml — settings']}>
+
+<Tab value="③ src/main.rs — your code">
+
+This is ordinary Rust — the thing you actually want to show. CineCode never
+edits it; it only films it. Change this file and the video changes on the next
+render.
+
+```rust title="src/main.rs"
+fn main() {
+    let greeting = "Hello, CineCode!";
+    println!("{greeting}");
+}
 ```
 
-## Step 2 — Understand the manifest
+</Tab>
 
-Open `codescene.toml`. It lists which scenes to play and how big the video is:
+<Tab value="② scenes/intro.ccs — the script">
+
+The script is the storyboard. `read("src/main.rs")` pulls in the code from the
+other tab, and the chained calls say *how* to animate it.
+
+```rust title="scenes/intro.ccs"
+// scene(name, duration_in_frames) — at 30 fps, 150 frames = 5 seconds
+let s = scene("Intro", 150);
+
+// A title that fades in, with a soft glow
+s.text("Hello, CineCode", 96, 48).font_size(52).glow(0.5).fade_in(0, 18);
+
+// Load src/main.rs and type it out like a keyboard
+let code = s.code(read("src/main.rs"), "rust", 96, 150);
+code.font_size(34).shadow(0.5).fade_in(0, 16).typewriter(6, 70);
+code.spotlight(2, 0.6, 90, 18);   // at frame 90, brighten line 2, dim the rest
+
+// A documentary camera that pushes in on line 2, then pulls back
+let cam = s.camera();
+cam.focus_on(code, 96, 24, 1.6, 2);
+cam.zoom_to(1, 130, 24);
+```
+
+What each line does:
+
+- `scene("Intro", 150)` — a 150-frame (5-second) scene.
+- `s.text(...)` — a title at pixel `(96, 48)`, faded in over frames 0–18.
+- `s.code(read("src/main.rs"), "rust", ...)` — loads and syntax-highlights your
+  real code.
+- `.typewriter(6, 70)` — types it out, starting at frame 6, over 70 frames.
+- `.spotlight(2, 0.6, 90, 18)` — at frame 90, brightens line 2 and dims the rest.
+
+</Tab>
+
+<Tab value="① codescene.toml — settings">
+
+The manifest says which scenes to play, the visual theme, and the output size.
 
 ```toml title="codescene.toml"
-scenes = ["intro"]
+scenes = ["scenes/intro.ccs"]
 theme = "dark_documentary"
 
 [episode]
-title = "My First Video"
+title = "my-video"
 
 [output]
 fps = 30
@@ -53,50 +112,48 @@ height = 720
   `[table]`. If you see a parse error, check that ordering first.
 </Callout>
 
-## Step 3 — Write the scene
+</Tab>
 
-Replace the contents of `scenes/intro.ccs` with this storyboard:
+</Tabs>
 
-```rust title="scenes/intro.ccs"
-// scene(name, duration_in_frames) — at 30 fps, 180 frames = 6 seconds
-let s = scene("Introduction", 180);
+## Step 3 — Render and watch
 
-// A title that fades in, with a soft glow
-s.text("Hello, CineCode", 96, 64)
-  .font_size(56)
-  .glow(0.6)
-  .fade_in(0, 20);
-
-// The code from src/main.rs, typed out like a keyboard
-let code = s.code(read("src/main.rs"), "rust", 96, 180);
-code.font_size(40)
-    .shadow(0.5)
-    .fade_in(0, 18)
-    .typewriter(8, 80);
-```
-
-What each piece does:
-
-- `scene("Introduction", 180)` declares a 180-frame scene.
-- `s.text(...)` adds a text element at pixel `(96, 64)`.
-- `.fade_in(0, 20)` fades it in over frames 0–20.
-- `s.code(read("src/main.rs"), "rust", ...)` loads and syntax-highlights real code.
-- `.typewriter(8, 80)` types it out starting at frame 8, over 80 frames.
-
-## Step 4 — Render and watch
+One command turns the three files into a video:
 
 ```bash
 ./target/release/cinecode render my-video -o my-video.mp4
 ```
 
-You should get something that looks like the intro scene of the example:
+Here is the **actual output** of the project above — the real code from
+`src/main.rs` typing itself out, with the spotlight landing on line 2:
 
-<Video src="intro" caption="A title fades in while code types itself out." />
+<Video src="first_video" caption="my-video.mp4 — your first render. The code in src/main.rs, filmed by intro.ccs." />
 
 <Callout type="info">
   Coordinates are in pixels from the top-left, before camera transforms. With a
   1280×720 output, `x = 96` leaves a comfortable left margin.
 </Callout>
+
+## Step 4 — Change something and re-render
+
+Make the loop click. Open `src/main.rs` and change just the greeting:
+
+```rust title="src/main.rs"
+fn main() {
+    let greeting = "Rivers carve canyons.";
+    println!("{greeting}");
+}
+```
+
+Render again — you don't touch the script at all, because the script just
+*reads* the file:
+
+```bash
+./target/release/cinecode render my-video -o my-video.mp4
+```
+
+The new text types itself out. That's the entire workflow: **edit your code (or
+the script), render, watch.**
 
 ## You did it
 

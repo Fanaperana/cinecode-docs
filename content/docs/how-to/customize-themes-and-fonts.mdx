@@ -30,18 +30,32 @@ Available project themes:
 ## Choose a code highlight theme
 
 `s.code()` accepts an optional theme argument to override the default just for
-that block:
+that block. The clip below styles this real file from the example project, so
+you can see exactly what each theme does to the same code:
+
+```rust title="src/editor_theme.rs"
+// blend two hex channels by a factor t
+fn blend(a: u32, b: u32, t: f32) -> u32 {
+    let v = a as f32 * (1.0 - t) + b as f32 * t;
+    return v.round() as u32;
+}
+
+fn main() {
+    let theme = "ocean";
+    println!("{theme} = {}", blend(0x10, 0xF0, 0.5));
+}
+```
 
 ```rust
 // code(source, lang, [theme], x, y)
-let a = s.code(read("src/main.rs"), "rust", "base16-ocean.dark", 96, 160);
+let a = s.code(read("src/editor_theme.rs"), "rust", "base16-ocean.dark", 96, 160);
 ```
 
 Built-in code themes include `base16-ocean.dark` (default),
 `base16-eighties.dark`, `base16-mocha.dark`, `Solarized (dark)`,
 `base16-ocean.light`, `Solarized (light)`, and `InspiredGitHub`.
 
-<Video src="editor_theme" caption="The same code under several highlight themes." />
+<Video src="editor_theme" caption="The src/editor_theme.rs file above, shown under several highlight themes." />
 
 List everything available on your build:
 
@@ -64,7 +78,7 @@ s.text("Chapter One", 96, 64).font("Inter").font_size(56);
 s.code(read("src/main.rs"), "rust", 96, 160).font("Fira Code");
 ```
 
-<Video src="font_set" caption="Swapping fonts changes the entire character of a scene." />
+<Video src="font_set" caption="The same sample rendered in several system fonts — swapping fonts changes the whole character of a scene." />
 
 <Callout type="info">
   CineCode bundles JetBrains Mono, so code renders out of the box even with no

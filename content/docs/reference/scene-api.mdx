@@ -35,6 +35,13 @@ let b = s.code(read("src/main.rs"), "rust", "Solarized (dark)", 96, 160);
 - `theme` — optional code highlight theme (see [Themes](/docs/reference/themes))
 - `x, y` — top-left position
 
+<Callout type="info">
+  `read("src/main.rs")` returns the **literal contents** of that file as a
+  string — the script never rewrites your code, it only loads and films it. You
+  can also pass an inline string, e.g. `s.code("let x = 1;", "rust", 96, 160)`.
+  See [How it works — three ingredients](/docs) for the full picture.
+</Callout>
+
 ## Shapes
 
 ```rust

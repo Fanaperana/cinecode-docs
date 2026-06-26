@@ -10,17 +10,33 @@ code even edits itself.
 We'll keep using the `my-video` project from the
 [previous lesson](/docs/tutorials/your-first-video).
 
+## Step 0 — Give yourself some code to walk through
+
+The starter `src/main.rs` is only three lines — not much to spotlight. Replace it
+with a small function so there are real lines to direct attention to:
+
+```rust title="src/main.rs"
+fn divide(a: i32, b: i32) -> i32 {
+    let result = a / b;
+    println!("{a} / {b} = {result}");
+    return result;
+}
+```
+
+Everything below animates **this** file. Keep it open — when the script says
+“line 2,” it means line 2 *here* (`let result = a / b;`).
+
 ## Step 1 — Spotlight a line
 
 A spotlight raises one line to full brightness and dims the rest. Add this after
 your `typewriter` call:
 
 ```rust title="scenes/intro.ccs"
-let code = s.code(read("src/main.rs"), "rust", 96, 180);
-code.font_size(40).fade_in(0, 18).typewriter(8, 80);
+let code = s.code(read("src/main.rs"), "rust", 96, 150);
+code.font_size(38).fade_in(0, 16).typewriter(6, 70);
 
-// After typing finishes (~frame 90), spotlight line 2 for the rest of the scene
-code.spotlight(2, 0.6, 96, 60);
+// After typing finishes (~frame 90), spotlight line 2 — the division
+code.spotlight(2, 0.6, 90, 18);
 ```
 
 `spotlight(line, dim, start, dur)`:
@@ -40,13 +56,17 @@ Call `spotlight` again to shift focus to another line. Each call animates from
 the previous state:
 
 ```rust
-code.spotlight(2, 0.6, 96, 30);   // focus line 2
-code.spotlight(5, 0.6, 130, 30);  // then slide focus to line 5
-code.unfocus(170, 10);            // release everyone at the end
+code.spotlight(2, 0.6, 92, 18);   // focus line 2 — the division
+s.underline(code, 2, 98, 12);     // underline it as you explain
+code.spotlight(3, 0.6, 150, 24);  // then slide focus to line 3 — the println
+code.unfocus(200, 16);            // release everyone at the end
 ```
 
 This is the core grammar of a CineCode walkthrough: **type the code, then walk
-the spotlight down it** as your narration explains each part.
+the spotlight down it** as your narration explains each part. Here is that exact
+script, rendered against the `divide` function above:
+
+<Video src="spotlight" caption="The src/main.rs above, typed out, with the spotlight walking from the division (line 2) to the println (line 3)." />
 
 ## Step 3 — Underline and point
 
@@ -66,13 +86,26 @@ set, including `surround` (a box around a range of lines).
 
 ## Step 4 — Edit the code live
 
-Code can change on screen. This is perfect for showing a refactor. Here the
-engine backspaces part of a line and retypes it:
+Code can change on screen — perfect for showing a refactor. The example project
+ships this real file, where `max` could be `0` and crash the divide:
 
-<Video src="edit_source" caption="A live refactor: guarding a divide by zero, on screen." />
+```rust title="src/edit_source.rs (in the example project)"
+fn normalize(values: &mut [f32]) {
+    let max = peak(values);
+    for v in values.iter_mut() {
+        *v = *v / max;
+    }
+}
+```
 
-The pattern uses `backspace_to` and `retype` (covered in detail in
-[Edit code live](/docs/how-to/edit-code-live)):
+The script reads that file, spotlights the risky `let max` line, then **inserts
+a guard clause** so the function is safe — all on screen. The source file itself
+is never touched; the *animation* does the editing:
+
+<Video src="edit_source" caption="A live refactor of src/edit_source.rs: spotlight the risky line, then insert a guard so normalize() is safe." />
+
+For a single line, the simplest pattern is `backspace_to` and `retype` (covered
+in detail in [Edit code live](/docs/how-to/edit-code-live)):
 
 ```rust
 let code = s.code(read("src/main.rs"), "rust", 96, 160);
