@@ -13,9 +13,9 @@ Simulations are scene elements, just like text and code. Create a new scene
 `scenes/terrain.ccs`:
 
 ```rust title="scenes/terrain.ccs"
-let s = scene("Generating Terrain", 180);
+let s = scene("Generating Terrain", sec(6));
 
-s.text("Procedural terrain", 96, 64).font_size(48).fade_in(0, 16);
+s.text("Procedural terrain", 96, 64).font_size(48).fade_in(0, ms(533));
 
 // A terrain heightmap, positioned on the right half of the frame
 let t = s.terrain(680, 160);
@@ -46,11 +46,11 @@ on the left:
 
 ```rust title="scenes/terrain.ccs"
 let code = s.code(read("src/terrain.rs"), "rust", 96, 160);
-code.font_size(34).fade_in(0, 14).typewriter(6, 70);
+code.font_size(34).fade_in(0, ms(467)).typewriter(ms(200), sec(2.33));
 
 let t = s.terrain(680, 160);
 t.seed(7).frequency(3.0).octaves(4).cells(48, 32).mode("heightmap");
-t.reveal(80, 40);
+t.reveal(sec(2.67), sec(1.33));
 ```
 
 ## Step 3 — Bind code to the simulation
@@ -60,7 +60,7 @@ the simulation, so when that line is active the diagram responds:
 
 ```rust
 // When line 4 (the noise call) is reached, drive the terrain
-s.link(code, 4, t, 90, 60);
+s.link(code, 4, t, sec(3), sec(2));
 ```
 
 This is the same mechanism the example uses across all six simulation types:

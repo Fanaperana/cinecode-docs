@@ -11,8 +11,9 @@ with `s.<sim>(...)`, configure it with a fluent chain, then drive it on the
 
 Every simulation node supports these timing methods:
 
-`start`, `dur`, and `cycle` accept raw frames or time helpers such as `ms(500)`
-and `sec(2)`.
+`start`, `dur`, and `cycle` accept raw frames or time helpers. Prefer helpers
+in new scripts: `ms(500)` is half a second, `sec(2)` is two seconds, and `s(2)`
+is the short seconds alias.
 
 | Method | Description |
 | --- | --- |
@@ -28,7 +29,7 @@ A procedural heightmap.
 ```rust
 let t = s.terrain(680, 160);
 t.seed(7).frequency(3.0).octaves(4).cells(48, 32).mode("heightmap");
-t.reveal(10, 50);
+t.reveal(ms(333), sec(1.67));
 ```
 
 | Method | Description |
@@ -48,7 +49,7 @@ A* search on a grid.
 ```rust
 let grid = s.pathfind(700, 150);
 grid.seed(11).cells(24, 18).wall_density(0.28);
-grid.run(20, 90);
+grid.run(ms(667), sec(3));
 ```
 
 | Method | Description |
@@ -70,7 +71,7 @@ Streams of particles between two points.
 // particles(from_x, from_y, to_x, to_y)
 let p = s.particles(200, 360, 1080, 360);
 p.count(400).spread(40.0).speed(6.0);
-p.run(10, 120);
+p.run(ms(333), sec(4));
 ```
 
 | Method | Description |
@@ -88,7 +89,7 @@ Graph traversal (BFS/DFS).
 ```rust
 let g = s.graph(640, 200);
 g.seed(3).nodes(18).algorithm("bfs");
-g.run(20, 100);
+g.run(ms(667), sec(3.33));
 ```
 
 | Method | Description |
@@ -106,7 +107,7 @@ Conway's Game of Life (and other rules).
 ```rust
 let l = s.life(640, 160);
 l.seed(5).cells(64, 36).density(0.3).generations(60).rule("B3/S23");
-l.run(0, 120);
+l.run(ms(0), sec(4));
 ```
 
 | Method | Description |
@@ -126,7 +127,7 @@ Flocking simulation.
 ```rust
 let b = s.boids(640, 360);
 b.seed(9).count(120).steps(200).separation(1.4).alignment(1.0).cohesion(0.8);
-b.run(0, 160);
+b.run(ms(0), s(5.33));
 ```
 
 | Method | Description |
