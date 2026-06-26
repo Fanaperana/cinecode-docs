@@ -15,6 +15,10 @@ example.
 
 <Video src="rivers-full" caption="The full “How Rivers Form” example — 17 scenes, one render." />
 
+Open **Files that made this video** under any clip. It shows the manifest, scene
+script, source files, shaders, and assets behind that exact render, so you can
+learn from the finished result without hunting through reference pages first.
+
 ## What makes CineCode different
 
 <Cards>
@@ -52,6 +56,14 @@ let code = s.code(read("src/main.rs"), "rust", 96, 150);
 // ...then says how to animate it
 code.typewriter(6, 70).spotlight(2, 0.6, 90, 18);
 ```
+
+When a page shows a video, read it in this order:
+
+1. Watch the clip once to see the result.
+2. Expand **Files that made this video** and find the `.ccs` scene script.
+3. Look for `read("...")` in that script; that tells you which source file is
+  being filmed.
+4. Change one value, render again, and compare the result.
 
 ## Find your way around
 

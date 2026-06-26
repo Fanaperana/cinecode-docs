@@ -35,6 +35,10 @@ Render and you'll see the terrain build itself:
 
 <Video src="terrain" caption="A seeded terrain heightmap, revealed over time." />
 
+Expand **Files that made this video** under the clip. The important pair is
+`scenes/terrain.ccs` and `src/terrain.rs`: the scene script places and animates
+the terrain, while the Rust file is the code shown beside it.
+
 ## Step 2 — Show the code beside it
 
 A diagram is more powerful next to the code that produces it. Add a code block
@@ -77,8 +81,10 @@ fluent chain, then `reveal` or `run` it. Swap `s.terrain(...)` for any of:
 - `s.life(...)` — Conway's Game of Life
 - `s.boids(...)` — flocking
 
-The full parameter list for each lives in
-[Simulations reference](/docs/reference/simulations).
+Each video on this page includes the scene script and source file that produced
+it. Once you can read those files, use the
+[Simulations reference](/docs/reference/simulations) as a dictionary for extra
+parameters.
 
 ## You did it
 

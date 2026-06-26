@@ -67,6 +67,10 @@ cinecode render my-video -o effects.mp4 --gpu --bloom 0.8
 
 <Video src="effects_gpu" caption="GPU render: background, region, and overlay shaders plus bloom." />
 
+Expand **Files that made this video** under the clip to see all the moving
+parts together: `codescene.toml` registers the shader names, `scenes/effects.ccs`
+places them in the frame, and the `.wgsl` files define the pixels.
+
 ## CPU vs GPU effects
 
 Some effects also exist on the CPU backend (no flag needed). Compare:
