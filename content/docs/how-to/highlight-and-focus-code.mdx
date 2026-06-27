@@ -12,7 +12,9 @@ all line numbers are **1-based**.
 
 ## Spotlight a line
 
-Raise one line to full brightness and dim the rest:
+Raise one line to full brightness and dim the rest. `spotlight` is **dim-only** —
+it focuses a line and fades the others back, the contrast alone carrying the
+focus (no accent bar):
 
 ```rust
 let code = s.code(read("src/main.rs"), "rust", 96, 160);
@@ -29,23 +31,60 @@ code.spotlight(7, 0.6, 120, 24);
 code.unfocus(170, 12); // release everyone
 ```
 
-### Spotlight without the accent bar
+## Highlight bar
 
-By default `spotlight` paints the accent-colored highlight bar behind the focused
-line. Pass a fifth `highlight: false` argument to keep the focused line bright and
-dim the rest **without** the bar — the contrast alone carries the focus (great
-paired with `underline`):
+When you want an accent bar **behind** a line, use `highlight(line, start, dur)`.
+It returns a chainable `Highlight` builder so you can style the bar Tailwind/
+GPUI-style:
 
 ```rust
-code.spotlight(3, 0.6, 80, 24, false); // dim others, no accent bar
+code.highlight(3, 80, 24); // accent bar behind line 3
 ```
+
+Layer it with `spotlight` for the classic "bar + dim" look:
+
+```rust
+code.highlight(3, 80, 24).rounded(6);
+code.spotlight(3, 0.6, 80, 24);
+```
+
+### Style the bar
+
+Every setter returns the builder, so they chain. Colors are `0–1` RGBA:
+
+```rust
+code.highlight(3, 80, 24)
+    .bg(0.20, 0.55, 1.0, 0.25) // translucent blue fill (alias: .color(...))
+    .rounded(8)                // corner radius (no-arg defaults to 8)
+    .pad(8, 4);                // extra padding around the line (x, y)
+```
+
+### Borders (per-side, Tailwind/GPUI-style)
+
+```rust
+code.highlight(3, 80, 24)
+    .bg(0.0, 0.0, 0.0, 0.0)        // transparent fill — borders only
+    .border_left()                // single accent edge
+    .border_color(0.20, 0.55, 1.0)
+    .border_dashed();             // .border_solid() / .border_dotted()
+```
+
+| Method | Effect |
+| ------ | ------ |
+| `border(w)` / `border()` | All four edges (width defaults to `2`). |
+| `border_top/right/bottom/left()` | Enable a single edge. |
+| `border_x()` / `border_y()` | Left+right / top+bottom edges. |
+| `border_color(r,g,b[,a])` | Border color (defaults to the fill). |
+| `border_width(w)` | Set the stroke width. |
+| `border_solid/dashed/dotted()` | Border line style. |
+| `no_border()` | Clear all borders. |
 
 ## Highlight without dimming
 
-To brighten a line without dimming the others:
+To raise the accent bar without dimming the others:
 
 ```rust
-code.highlight_line(5, 90, 16);
+code.highlight(5, 90, 16);
 ```
 
 Or invert it — dim everything *except* a line:

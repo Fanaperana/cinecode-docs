@@ -89,17 +89,45 @@ See [Easing](/docs/reference/easing).
 
 | Method | Description |
 | --- | --- |
-| `highlight_line(line, start, dur)` | Brighten a line. |
-| `dim_others(line, dim, start, dur)` | Dim every line except one. |
-| `spotlight(line, dim, start, dur)` | Brighten one line and dim the rest. |
-| `spotlight(line, dim, start, dur, highlight)` | Same; `highlight: false` dims the rest without the accent bar. |
+| `highlight(line, start, dur)` | Raise a styleable accent bar behind a line. Returns a chainable `Highlight` builder. |
+| `highlight_line(line, start, dur)` | Plain accent bar behind a line (no builder). |
+| `dim_others(line, dim, start, dur)` | Focus a line and dim every other line. |
+| `spotlight(line, dim, start, dur)` | Focus a line and dim the rest — **no** accent bar. |
 | `unfocus(start, dur)` | Release all focus effects. |
 
 ```rust
-code.spotlight(3, 0.6, 80, 24);
-code.spotlight(7, 0.6, 120, 24);
-code.spotlight(3, 0.6, 80, 24, false); // dim others, no accent bar
+code.spotlight(3, 0.6, 80, 24);   // dim others, no bar
+code.spotlight(7, 0.6, 120, 24);  // focus glides to line 7
+code.highlight(3, 80, 24);        // accent bar behind line 3
 code.unfocus(170, 12);
+```
+
+### `Highlight` builder
+
+Chain setters off `highlight(...)` to style the bar (Tailwind/GPUI-style). Each
+returns the builder; colors are `0–1` RGBA.
+
+| Method | Description |
+| --- | --- |
+| `bg(r,g,b[,a])` / `color(...)` | Bar fill color. |
+| `rounded(r)` / `rounded()` | Corner radius (no-arg `= 8`). Alias `radius(r)`. |
+| `pad(x,y)` / `pad(v)` | Padding around the line (px). |
+| `border(w)` / `border()` | All four edges (width `= 2`). |
+| `border_top/right/bottom/left()` | Single edge. |
+| `border_x()` / `border_y()` | Left+right / top+bottom. |
+| `border_color(r,g,b[,a])` | Border color (defaults to fill). |
+| `border_width(w)` | Stroke width. |
+| `border_solid/dashed/dotted()` | Border line style. |
+| `no_border()` | Clear all borders. |
+
+```rust
+code.highlight(3, 80, 24)
+    .bg(0.20, 0.55, 1.0, 0.25)
+    .rounded(8)
+    .pad(8, 4)
+    .border_left()
+    .border_color(0.20, 0.55, 1.0)
+    .border_dashed();
 ```
 
 ## In action
