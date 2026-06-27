@@ -70,9 +70,21 @@ See [Easing](/docs/reference/easing).
 | --- | --- |
 | `font_size(px)` | Set the font size. |
 | `font(name)` | Select a loaded font. |
+| `opacity(a)` / `alpha(a)` | Static base opacity (`0`–`1`). Multiplies the animated track, so it composes with `fade_in`/`dissolve`. |
 | `glow(amount)` | Add a glow. |
 | `shadow(amount)` | Add a drop shadow. |
 | `blur(amount)` | Apply a blur. |
+
+```rust
+s.text("Subtle watermark", 60, 60).opacity(0.35);
+code.opacity(0.8).fade_in(0, 16);   // dimmed code that fades in to 0.8
+```
+
+<Callout type="info">
+  `opacity(a)` is a **constant** base level; `fade_to(a, start, dur)` *animates*
+  toward a target. The on-screen alpha is `opacity × (animated track)`, so
+  `.opacity(0.5).fade_in(0, 18)` fades from 0 up to 0.5.
+</Callout>
 
 ## Shape styling
 
@@ -110,6 +122,7 @@ returns the builder; colors are `0–1` RGBA.
 | Method | Description |
 | --- | --- |
 | `bg(r,g,b[,a])` / `color(...)` | Bar fill color. |
+| `opacity(a)` / `alpha(a)` | Bar fill alpha only (leaves `bg` rgb untouched). |
 | `rounded(r)` / `rounded()` | Corner radius (no-arg `= 8`). Alias `radius(r)`. |
 | `pad(x,y)` / `pad(v)` | Padding around the line (px). |
 | `border(w)` / `border()` | All four edges (width `= 2`). |

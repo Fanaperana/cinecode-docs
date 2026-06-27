@@ -46,6 +46,22 @@ cinecode render my-video -o final.mp4 --crf 18 --preset slow
 - `--crf <18–28>` — constant rate factor. Lower = higher quality, larger file.
 - `--preset <p>` — ffmpeg speed/efficiency preset (`ultrafast` … `veryslow`).
 
+## Smooth edges and zooms (`--ssaa`)
+
+The CPU backend supersamples by default (`--ssaa 2`): it renders each frame at
+double resolution and averages it down, which anti-aliases every stroke, glyph,
+and rounded panel and keeps camera zooms from shimmering.
+
+```bash
+cinecode render my-video -o draft.mp4 --ssaa 1   # fastest, native res
+cinecode render my-video -o hero.mp4  --ssaa 4   # crispest, ~16× the pixels
+```
+
+<Callout type="info">
+  `2` is the sweet spot and the default. Use `1` for quick drafts and `3`–`4`
+  for a final pass. See the [CLI reference](/docs/reference/cli#supersampling).
+</Callout>
+
 ## Export frames instead of a video
 
 ```bash

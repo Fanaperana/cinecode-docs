@@ -56,8 +56,16 @@ Every setter returns the builder, so they chain. Colors are `0–1` RGBA:
 code.highlight(3, 80, 24)
     .bg(0.20, 0.55, 1.0, 0.25) // translucent blue fill (alias: .color(...))
     .rounded(8)                // corner radius (no-arg defaults to 8)
+    .opacity(0.4)              // set just the fill alpha, keep the rgb
     .pad(8, 4);                // extra padding around the line (x, y)
 ```
+
+<Callout type="info">
+  `.opacity(a)` / `.alpha(a)` on the builder sets only the bar's fill alpha, so
+  you can pick a color with `.bg(r, g, b)` and dial transparency separately.
+  (The whole *node* also has its own `.opacity(a)` — see
+  [Code &amp; node animations](/docs/reference/code-animations#style).)
+</Callout>
 
 ### Borders (per-side, Tailwind/GPUI-style)
 
@@ -115,6 +123,32 @@ Drop an arrow that points at a line from a screen position:
 // point_at(code, line, from_x, from_y, start, dur)
 s.point_at(code, 6, 760, 300, 120, 20);
 ```
+
+## Gate focus on a marker (after the code finishes typing)
+
+A spotlight reads best **after** the line it points to is fully on screen. Drive
+the timing with [named markers](/docs/reference/scene-api#timeline-markers) so the
+highlight fires exactly when the typewriter completes — no frame math, and it
+stays correct if you change the typing speed:
+
+```rust
+mark("type", ms(260));                  // typewriter starts
+mark("typed", after("type", sec(2.4))); // ...and finishes here
+
+code.typewriter(at("type"), sec(2.4));
+
+// Spotlight + camera only once the code is fully rendered.
+code.highlight(5, at("typed"), ms(450)).rounded(8);
+code.spotlight(5, 0.55, at("typed"), ms(450));
+
+let cam = s.camera();
+cam.focus_on(code, at("typed"), ms(700), 1.4, 5);
+```
+
+Because `typed` is defined as `after("type", sec(2.4))` — the same duration the
+typewriter runs — the focus always lands on the first fully-typed frame.
+
+<Video src="styled-cards" caption="Markers gate the spotlight: the code types in, and only when it's complete does the camera push in on the highlighted line." />
 
 ## Putting it together
 

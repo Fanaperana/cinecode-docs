@@ -37,6 +37,7 @@ cinecode render <project> -o <output> [flags]
 | `--bloom <n>` | Bloom intensity for the GPU backend. |
 | `--crf <18–28>` | H.264 quality; lower is better/larger. |
 | `--preset <p>` | ffmpeg speed preset (`ultrafast` … `veryslow`). |
+| `--ssaa <1–4>` | CPU supersampling (anti-aliasing). Default **2**. |
 | `--format png` | Export numbered PNG frames instead of a video. |
 | `-q, --quiet` | Minimal output. |
 | `-v, --verbose` | Detailed output. |
@@ -44,6 +45,25 @@ cinecode render <project> -o <output> [flags]
 <Callout type="warn">
   Scene selection is **1-based**. `-s 1` is the first scene; `-s 0` errors.
 </Callout>
+
+### Supersampling
+
+The CPU backend renders each frame at `ssaa×` the output resolution and box-
+averages it down, which smooths every edge — strokes, glyphs, and rounded
+panels — and keeps camera zooms from shimmering or "crawling".
+
+| Value | Use |
+| --- | --- |
+| `1` | Native resolution, fastest. Edges may alias under zoom. |
+| `2` | **Default.** The sweet spot — smooth, modest cost. |
+| `3`–`4` | Final/hero exports. Sharper still, but `4×` renders 16× the pixels. |
+
+<Callout type="info">
+  `--ssaa` applies to the CPU backend. The default of **2** is why fresh renders
+  already look anti-aliased — pass `--ssaa 1` to opt out, or `--ssaa 4` for a
+  final pass.
+</Callout>
+
 
 ### Examples
 
@@ -54,6 +74,7 @@ cinecode render my-video -s 3 -o scene3.mp4
 cinecode render my-video --from intro --to graph -o part1.mp4
 cinecode render my-video -o final.mp4 --crf 18 --preset slow
 cinecode render my-video -o effects.mp4 --gpu --bloom 0.8
+cinecode render my-video -o hero.mp4 --ssaa 4 --crf 18 --preset slow
 cinecode render my-video --format png -o frames/
 ```
 
