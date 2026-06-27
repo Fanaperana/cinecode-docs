@@ -14,6 +14,8 @@ exposes a set of global functions and a fluent, chainable builder API.
 - **Time** accepts raw frames or helpers. `ms(500)` is half a second,
   `sec(2)` is two seconds, and `s(2)` is a short alias. Conversion uses the
   project's `[output].fps`.
+- **Markers** name timeline moments. Use `mark("focus", sec(3))`, reuse it with
+  `at("focus")`, and offset it with `after("focus", ms(600))`.
 - **Line numbers** passed to focus/highlight methods are **1-based**.
 - **Colors** are `r, g, b` (and sometimes `a`) integers in `0–255`.
 
@@ -25,10 +27,16 @@ exposes a set of global functions and a fluent, chainable builder API.
 | `read(path)` | string | Read a file (relative to the project) as text. |
 | `ms(n)` / `millis(n)` / `milliseconds(n)` | number | Convert milliseconds to frames. |
 | `sec(n)` / `secs(n)` / `seconds(n)` / `s(n)` | number | Convert seconds to frames. |
+| `mark(name, time)` | number | Store a named timeline moment and return its frame. |
+| `at(name)` | number | Read a named timeline marker. |
+| `after(name, offset)` | number | Return a marker plus an offset. |
+| `after(time, offset)` | number | Return one time value plus another. |
 | `ease(equation, mode)` | easing | Build a reusable easing curve. |
 
 ```rust
 let s = scene("Introduction", sec(6));
+mark("code_in", sec(1));
+
 let source = read("src/main.rs");
 let snappy = ease(BACK, EASE_OUT);
 ```
@@ -39,12 +47,14 @@ Everything on a scene is created through `s.*` and configured by chaining:
 
 ```rust
 let s = scene("Demo", sec(4));
+mark("enter", ms(300));
+mark("focus", after("enter", sec(1.5)));
 
 s.text("Title", 96, 64)     // create a node…
   .font_size(48)            // …style it…
   .glow(0.5)
-  .fade_in(0, ms(533))      // …and animate it
-  .slide_up(0, ms(533)).ease(CUBIC, EASE_OUT);
+  .fade_in(at("enter"), ms(533))      // …and animate it
+  .slide_up(at("enter"), ms(533)).ease(CUBIC, EASE_OUT);
 ```
 
 Each builder call returns the node (or scene) so chains read top-to-bottom.

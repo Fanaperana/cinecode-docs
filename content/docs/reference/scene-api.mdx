@@ -20,6 +20,28 @@ let quick = scene("Title card", ms(2500));
 `ms(n)` converts milliseconds to frames. `sec(n)`, `secs(n)`, `seconds(n)`, and
 `s(n)` convert seconds to frames using `[output].fps` from `codescene.toml`.
 
+## Timeline markers
+
+Use markers when a scene has more than a couple of timed actions. Markers keep
+the script readable because animation calls can refer to named moments instead
+of repeating raw offsets.
+
+```rust
+mark("code_in", sec(1));
+mark("focus_line", after("code_in", sec(1.4)));
+
+code.fade_in(at("code_in"), ms(500));
+code.typewriter(after("code_in", ms(200)), sec(2.2));
+code.spotlight(2, 0.6, at("focus_line"), ms(650));
+```
+
+| Function | Description |
+| --- | --- |
+| `mark(name, time)` | Store a named timeline position and return its frame. |
+| `at(name)` | Read a named timeline position. |
+| `after(name, offset)` | Return a marker plus an offset. |
+| `after(time, offset)` | Return one time value plus another. |
+
 ## Text
 
 ```rust
