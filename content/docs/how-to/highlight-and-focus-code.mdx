@@ -29,6 +29,17 @@ code.spotlight(7, 0.6, 120, 24);
 code.unfocus(170, 12); // release everyone
 ```
 
+### Spotlight without the accent bar
+
+By default `spotlight` paints the accent-colored highlight bar behind the focused
+line. Pass a fifth `highlight: false` argument to keep the focused line bright and
+dim the rest **without** the bar — the contrast alone carries the focus (great
+paired with `underline`):
+
+```rust
+code.spotlight(3, 0.6, 80, 24, false); // dim others, no accent bar
+```
+
 ## Highlight without dimming
 
 To brighten a line without dimming the others:

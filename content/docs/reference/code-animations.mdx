@@ -92,11 +92,13 @@ See [Easing](/docs/reference/easing).
 | `highlight_line(line, start, dur)` | Brighten a line. |
 | `dim_others(line, dim, start, dur)` | Dim every line except one. |
 | `spotlight(line, dim, start, dur)` | Brighten one line and dim the rest. |
+| `spotlight(line, dim, start, dur, highlight)` | Same; `highlight: false` dims the rest without the accent bar. |
 | `unfocus(start, dur)` | Release all focus effects. |
 
 ```rust
 code.spotlight(3, 0.6, 80, 24);
 code.spotlight(7, 0.6, 120, 24);
+code.spotlight(3, 0.6, 80, 24, false); // dim others, no accent bar
 code.unfocus(170, 12);
 ```
 
