@@ -124,6 +124,28 @@ Nodes (5):
   [var_3] text        op 0.00 scale 0.70  (hidden)
 ```
 
+## `cinecode preview`
+
+Open an interactive window playing a scene, re-rendered on the CPU in real time
+(no SSAA, no MP4 encode) — the fast iteration loop.
+
+```bash
+cinecode preview <project> [--scene <name|index>]
+```
+
+| Key | Action |
+| --- | --- |
+| `Space` | Play / pause |
+| `←` / `→` | Step one frame back / forward (pauses) |
+| `R` | Reload — re-run the scripts to pick up `.ccs` edits |
+| `S` | Save the current frame as `preview_<scene>_<frame>.png` |
+| `Esc` | Quit |
+
+<Callout type="info">
+  Preview needs a display (it won't run headless). It previews one scene at a
+  time — pass `--scene` to pick which. Saving a PNG uses ffmpeg.
+</Callout>
+
 ## `cinecode themes`
 
 List available project and code highlight themes.
