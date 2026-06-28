@@ -81,9 +81,47 @@ cinecode render my-video --format png -o frames/
 ## `cinecode check`
 
 Parse the manifest and all scene scripts and report errors without rendering.
+Beyond load errors (missing scene/source files, bad `.ccs` syntax, missing
+fonts), it reports per-scene warnings (zero-frame or empty scenes, mismatched
+dimensions, duplicate node ids) and whether **ffmpeg** is on your PATH.
 
 ```bash
 cinecode check <project>
+```
+
+## `cinecode dump-ir`
+
+Build the project and print its **Scene Document** (the engine IR) as JSON —
+useful for debugging what the scripts produced, or for caching a built document.
+
+```bash
+cinecode dump-ir <project> [--scene <name|index>] [--output ir.json]
+```
+
+| Flag | Description |
+| --- | --- |
+| `-s, --scene <name\|index>` | Limit to one scene. |
+| `-o, --output <path>` | Write to a file instead of stdout. |
+
+## `cinecode explain-frame`
+
+Evaluate a single frame of a scene and print each node's resolved animation
+state (opacity, offset, scale, focus line, dim, highlight bar, typewriter /
+reveal progress, blur) plus the camera framing — a fast way to see exactly what
+the renderer "sees" at a moment, without producing pixels.
+
+```bash
+cinecode explain-frame <project> [--scene <name|index>] --frame <n>
+```
+
+Example output:
+
+```text
+Scene "Run" (id scene_0) @ frame 80/210 (2.67s @ 30fps), 1280x720
+Camera: none (identity framing, zoom 1.0)
+Nodes (5):
+  [code_2] code        op 1.00 focus L1.0 dim 0.55 bar 1.00 type 100%
+  [var_3] text        op 0.00 scale 0.70  (hidden)
 ```
 
 ## `cinecode themes`
