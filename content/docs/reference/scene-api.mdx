@@ -105,14 +105,28 @@ s.point_at(code, 5, 760, 320, sec(4), ms(600));
 
 // variable_update(node, line, label, start, dur) — a value badge beside a line
 s.variable_update(code, 4, "acc = 6", sec(4), ms(250));
+```
 
-// diff_add / diff_remove (node, line, start, dur) — mark one changed line
+## Diff (added / removed lines)
+
+Mark a code change like a review — a tinted band, a colored gutter stripe, and a
+`+`/`-` sign per line (green = added, red = removed):
+
+```rust
+// diff_add / diff_remove(node, line, start, dur) — one changed line
 s.diff_add(code, 3, sec(4), ms(450));
 s.diff_remove(code, 2, sec(4), ms(450));
 
 // diff(node, added_lines, removed_lines, start, dur) — a whole patch at once
 s.diff(code, [3], [2], sec(4), ms(450));
+```
 
+## Data flow & token transforms
+
+Operate on individual tokens (matched by substring) to show how a value flows or
+how a refactor reshapes the code:
+
+```rust
 // token_trace(node, from_line, from_token, to_line, to_token, start, dur)
 // — an arrow from one token to another, tracing a value's data flow
 s.token_trace(code, 1, "total", 3, "total", sec(4), ms(450));
@@ -126,6 +140,13 @@ s.move_token(code, 1, "total", 900, 300, sec(4), ms(650));
 //   for a real code edit.
 s.morph_token(code, 2, "vat", "tax", sec(4), ms(500));
 ```
+
+<Callout type="info">
+  `diff`, `token_trace`, `move_token`, and `morph_token` are visual annotations
+  drawn over the code — the code node's text is unchanged. For edits that change
+  the source itself, use `retype` / `backspace` (see
+  [Code &amp; node animations](/docs/reference/code-animations#live-code-editing)).
+</Callout>
 
 ## Morph
 
