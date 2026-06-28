@@ -105,6 +105,8 @@ code.opacity(0.8).fade_in(0, 16);   // dimmed code that fades in to 0.8
 | `highlight_line(line, start, dur)` | Plain accent bar behind a line (no builder). |
 | `dim_others(line, dim, start, dur)` | Focus a line and dim every other line. |
 | `spotlight(line, dim, start, dur)` | Focus a line and dim the rest — **no** accent bar. |
+| `execution_cursor(line, start, dur)` | A "program counter": accent bar **plus** dimming, marking the line currently running. |
+| `execution_flow(lines, start, step)` | Step the cursor through an ordered list of lines (`[1, 2, 5, 2, 6]`) — watch control flow move. Holds at the end. |
 | `unfocus(start, dur)` | Release all focus effects. |
 
 ```rust
