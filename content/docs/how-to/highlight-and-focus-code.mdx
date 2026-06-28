@@ -140,6 +140,26 @@ s.variable_update(code, 4, "acc = 6", at("step3"), ms(250));
 
 <Video src="execution" caption="execution_flow walks the cursor through a factorial loop while variable_update badges track acc changing 1 → 2 → 6." />
 
+## Show a diff (watch a refactor)
+
+Visualize a code change like a review: `diff(code, added, removed, start, dur)`
+marks added lines green and removed lines red — each gets a subtle full-line
+tint, an opaque colored gutter stripe, and a `+`/`-` sign. Use `diff_add` /
+`diff_remove` for single lines.
+
+```rust
+let code = s.code(read("src/parse.rs"), "rust", 150, 150);
+code.typewriter(at("in"), sec(1.6));
+
+// Replace the unsafe line (2) with the safe one (3).
+s.diff(code, [3], [2], at("patch"), ms(450));
+```
+
+The colored gutter stripe carries the diff color unambiguously even over
+syntax-highlighted text, so green/red read clearly at a glance.
+
+<Video src="diff" caption="diff() marks the removed unwrap() line red and the added unwrap_or(0) line green — a one-line refactor, shown like a code review." />
+
 ## Underline a line
 
 ```rust

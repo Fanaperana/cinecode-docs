@@ -105,6 +105,13 @@ s.point_at(code, 5, 760, 320, sec(4), ms(600));
 
 // variable_update(node, line, label, start, dur) — a value badge beside a line
 s.variable_update(code, 4, "acc = 6", sec(4), ms(250));
+
+// diff_add / diff_remove (node, line, start, dur) — mark one changed line
+s.diff_add(code, 3, sec(4), ms(450));
+s.diff_remove(code, 2, sec(4), ms(450));
+
+// diff(node, added_lines, removed_lines, start, dur) — a whole patch at once
+s.diff(code, [3], [2], sec(4), ms(450));
 ```
 
 ## Morph
