@@ -160,6 +160,44 @@ syntax-highlighted text, so green/red read clearly at a glance.
 
 <Video src="diff" caption="diff() marks the removed unwrap() line red and the added unwrap_or(0) line green — a one-line refactor, shown like a code review." />
 
+## Trace a value's flow
+
+`token_trace(code, from_line, from_token, to_line, to_token, start, dur)` draws an
+arrow from one token to another — follow a value from its binding to each use.
+Tokens are matched by substring, so you don't count columns:
+
+```rust
+// Trace `total` from its definition (line 1) to each use (lines 2, 3).
+s.token_trace(code, 1, "total", 2, "total", at("t1"), ms(450));
+s.token_trace(code, 1, "total", 3, "total", at("t2"), ms(450));
+```
+
+<Video src="trace" caption="token_trace follows the value total from its binding to every place it's used." />
+
+## Move and morph tokens
+
+Transform individual tokens for refactor stories. `morph_token` swaps a token's
+text in place (an odometer roll — great for a rename); `move_token` glides a
+ghost copy of a token out of the code, leaving its slot empty (extract / hoist).
+Both occlude the original with a chip matching the code panel, so there's no
+doubling.
+
+```rust
+// Rename `vat` -> `tax` in place.
+s.morph_token(code, 2, "vat", "tax", at("rename"), ms(500));
+
+// Extract `total` to a callout on the right.
+s.move_token(code, 1, "total", 900, 300, at("extract"), ms(650));
+```
+
+<Callout type="info">
+  These are visual annotations — the code node's text is unchanged. For a *real*
+  edit (the source string actually changing), use `retype` / `backspace` from
+  [Edit code live](/docs/how-to/edit-code-live).
+</Callout>
+
+<Video src="transform" caption="morph_token renames vat to tax in place; move_token then glides total out to a hoisted callout." />
+
 ## Underline a line
 
 ```rust

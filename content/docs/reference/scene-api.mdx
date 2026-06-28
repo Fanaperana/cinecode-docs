@@ -112,6 +112,19 @@ s.diff_remove(code, 2, sec(4), ms(450));
 
 // diff(node, added_lines, removed_lines, start, dur) — a whole patch at once
 s.diff(code, [3], [2], sec(4), ms(450));
+
+// token_trace(node, from_line, from_token, to_line, to_token, start, dur)
+// — an arrow from one token to another, tracing a value's data flow
+s.token_trace(code, 1, "total", 3, "total", sec(4), ms(450));
+
+// move_token(node, line, token, to_x, to_y, start, dur)
+// — a ghost copy glides out, leaving the slot empty (extract / hoist)
+s.move_token(code, 1, "total", 900, 300, sec(4), ms(650));
+
+// morph_token(node, line, token, new_text, start, dur)
+// — an in-place odometer swap (rename). A visual annotation; use `retype`
+//   for a real code edit.
+s.morph_token(code, 2, "vat", "tax", sec(4), ms(500));
 ```
 
 ## Morph
