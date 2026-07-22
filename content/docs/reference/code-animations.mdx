@@ -40,6 +40,35 @@ line numbers are **1-based**.
 | `scale_to(factor, start, dur)` | Scale to a target factor. |
 | `fade_to(opacity, start, dur)` | Fade to a target opacity. |
 | `color_to(r, g, b, start, dur)` | Tween to a target color. |
+| `rotate(deg)` | Set a static rotation (degrees, clockwise) about the node's origin. |
+| `rotate_to(deg, start, dur)` | Animate rotation to `deg`; chain `.ease(SPRING)` for a springy snap. |
+| `spin(turns, start, dur)` | Rotate `turns` full revolutions at constant speed, relative to the current angle. |
+| `shake(amp, start, dur)` | Wobble **this element only** by up to `amp` px, decaying to 0. |
+
+### Rotation
+
+`rotate` sets a fixed angle; `rotate_to` and `spin` animate it. Angles are in
+degrees, clockwise, pivoting about the node's transform origin. Retarget
+`rotate_to` with any [easing](/docs/reference/easing) — `SPRING` gives a lively
+overshoot-and-settle.
+
+```rust
+let card = s.square(600, 360, 120).rotate(45);   // start tilted
+card.rotate_to(0, sec(1), sec(1.4)).ease(SPRING); // snap upright, springy
+badge.spin(2, sec(0), sec(2.4));                  // two full turns, constant speed
+```
+
+### Shake
+
+`shake` jitters a single node's position by up to `amp` pixels at `start`,
+settling back to zero by `start + dur`. Only that element moves — everything
+else stays put. It's deterministic per frame, so renders are reproducible. (To
+rattle the whole frame instead, use the camera's
+[`shake`](/docs/reference/camera).)
+
+```rust
+card.shake(20, sec(5.4), sec(0.8)); // an impact wobble on just this card
+```
 
 ## Live code editing
 

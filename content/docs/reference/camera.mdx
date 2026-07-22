@@ -42,6 +42,39 @@ Change magnification.
 cam.zoom_to(1.0, sec(5), sec(1)); // ease back to 1×
 ```
 
+## `dolly_to(x, y, zoom, start, dur)`
+
+A combined truck **and** push-in: pan the focal point to `(x, y)` and change the
+zoom together over one interval, so the two read as a single continuous move.
+Chained dollies each continue from the previous framing.
+
+```rust
+cam.dolly_to(640, 430, 1.5, sec(4), sec(1.2)); // push in on the action
+cam.dolly_to(640, 360, 1.0, sec(6), sec(1));   // pull back out
+```
+
+## `shake(amp, start, dur)`
+
+A decaying handheld/impact shake of the **whole scene**. The focal point jitters
+by up to `amp` scene units at `start` and settles back to zero by `start + dur`.
+It's deterministic per frame, so renders are reproducible.
+
+```rust
+cam.shake(12, sec(5.4), sec(0.7)); // rattle the entire frame with a jolt
+```
+
+To wobble a **single element** instead of the whole frame, call `shake` on a
+node — see [`shake` in Code animations](/docs/reference/code-animations#shake).
+
+<Video
+  src="motion"
+  caption="Rotation, a dolly with a single-element shake, spring easing, and relative sequencing — all in one scene."
+/>
+
+The clip above comes from the `motion-showcase` example and also demonstrates
+node [rotation](/docs/reference/code-animations#rotation), the
+[`SPRING`](/docs/reference/easing) ease, and relative sequencing.
+
 ## Combining moves
 
 Pan and zoom in the same frame window so they read as a single motion, and add
