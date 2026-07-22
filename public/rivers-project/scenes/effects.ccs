@@ -1,0 +1,41 @@
+// effects.ccs — a showcase of the GPU shader pipeline, text-insert entrance
+// animations, and Godot-style tween easing presets.
+//
+// This scene only reaches its full look with the GPU backend:
+//   cinecode render examples/rivers-project -o out/rivers.mp4 --gpu --bloom 0.9
+
+let s = scene("Effects Showcase", 260);
+
+// 1) An animated aurora BACKGROUND shader, painted beneath all content.
+//    params(hue, _, _, _) — shift the palette.
+s.background_shader("aurora").params(0.06, 0, 0, 0);
+
+// 2) Title slides down and overshoots with a BACK / EASE_OUT tween preset.
+s.text("Shaders, Tweens & Inserts", 96, 48)
+    .font_size(50)
+    .glow(0.6)
+    .slide_in("up", 70, 0, 28)
+    .ease(BACK, EASE_OUT);
+
+// 3) Build code by INSERTING it: it types in, then a glitch effect distorts
+//    just that region (an overlay shader sampling the frame beneath it).
+let code = s.code(read("src/erosion.rs"), "rust", 96, 170);
+code.font_size(32).shadow(0.6).fade_in(10, 16).typewriter(14, 70);
+
+// A region shader over the code block (x, y, w, h in screen pixels).
+s.shader("glitch", 90, 165, 800, 360)
+    .params(1.0, 0, 0, 0)
+    .fade_in(120, 12)
+    .dissolve(210, 26);
+
+// 4) "Shift then slide": an existing note nudges up to make room while a new
+//    line appears beneath it — each with a different tween preset.
+let note = s.text("> chromatic split over the erosion step", 96, 600).font_size(26);
+note.slide_in("right", 240, 96, 26).ease(QUART, EASE_OUT);
+
+let tip = s.text("rendered on the GPU", 96, 642).font_size(22);
+note.shift(0, -10, 150, 18);            // existing note shifts up...
+tip.appear(150, 24).ease(BACK, EASE_OUT); // ...new line bounces in below
+
+// 5) A fullscreen CRT OVERLAY shader: scanlines + vignette over everything.
+s.overlay_shader("scanlines");

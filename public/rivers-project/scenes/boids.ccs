@@ -1,0 +1,24 @@
+// boids.ccs — Boids flocking. No bird is in charge: the flock emerges from three
+// tiny rules (separation, alignment, cohesion). The `reveal`/`run` drives the
+// simulation step, so the swarm forms and moves over the timeline.
+
+let s = scene("Flocking", sec(8));
+
+s.text("Boids: Emergent Flocking", 96, 40).font_size(44).glow(0.6).fade_in(0, ms(533));
+
+let code = s.code(read("src/boids.rs"), "rust", 96, 150);
+code.font_size(28).shadow(0.5).fade_in(0, ms(533)).typewriter(ms(133), sec(2));
+
+// The flock (agents shown as dots with gold velocity vectors).
+let flock = s.boids(700, 110, 500, 500);
+flock.seed(4).count(110).steps(170).separation(1.4).alignment(1.0).cohesion(0.9);
+
+// Bind the velocity-update line and run the flock.
+s.link(code, 6, flock, sec(2.67), s(5.33));
+
+// Camera pushes in on the swarm, then pulls back.
+let cam = s.camera();
+cam.move_to(950, 360, sec(5), sec(1.2));
+cam.zoom_to(1.12, sec(5), sec(1.2));
+cam.move_to(640, 360, ms(7467), ms(467));
+cam.zoom_to(1, ms(7467), ms(467));

@@ -1,0 +1,31 @@
+// pathfind.ccs — Demo 2: A* over a grid with walls, bound to the code that
+// runs it. The simulation reveals in two phases — first it explores the grid
+// (closed cells spread out from the start), then it traces the final path.
+
+let s = scene("A* Pathfinding", sec(8));
+
+s.transition("slide_left", ms(733)).ease(EXPO, EASE_OUT); // push, eased out
+
+s.text("A* Pathfinding", 96, 40).font_size(48).glow(0.6).fade_in(0, ms(533));
+
+let code = s.code(read("src/astar.rs"), "rust", 96, 150);
+code.font_size(30).shadow(0.5).fade_in(0, ms(533)).typewriter(ms(133), sec(2.13));
+
+// The A* grid simulation (start = top-left, goal = bottom-right).
+let grid = s.pathfind(700, 110, 500, 500);
+grid.seed(9).cells(40, 40).wall_density(0.25);
+
+// Bind the exploration loop to the grid: spotlight + arrow + reveal.
+// `reveal` plays the explore phase, then traces the path.
+s.link(code, 3, grid, sec(2.67), sec(4));
+
+// Spotlight the path-reconstruction line as the route is drawn.
+code.highlight(4, ms(6133), ms(533)).rounded(6);
+code.spotlight(4, 0.6, ms(6133), ms(533));
+
+// Camera pushes in on the search, then pulls back to the full grid.
+let cam = s.camera();
+cam.move_to(950, 360, sec(5), sec(1.2));
+cam.zoom_to(1.2, sec(5), sec(1.2));
+cam.move_to(640, 360, ms(7467), ms(467));
+cam.zoom_to(1, ms(7467), ms(467));

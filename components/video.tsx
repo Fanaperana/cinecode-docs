@@ -14,11 +14,6 @@ interface SourceBundle {
   files: SourceFile[];
 }
 
-const exampleBaseUrl =
-  'https://github.com/Fanaperana/cinecode/tree/main/examples/rivers-project';
-const exampleRawBaseUrl =
-  'https://raw.githubusercontent.com/Fanaperana/cinecode/main/examples/rivers-project';
-
 const manifestFile: SourceFile = {
   path: 'codescene.toml',
   role: 'Project manifest: output size, theme, scene order, transitions, and shader names.',
@@ -416,11 +411,13 @@ function baseName(src: string): string {
 }
 
 function exampleFileUrl(path: string): string {
-  return `${exampleBaseUrl}/${path}`;
+  // The engine repo is private, so GitHub tree/raw URLs 404 for visitors.
+  // Serve the vendored copy from the docs site itself (see public/rivers-project).
+  return withBasePath(`/rivers-project/${path}`);
 }
 
 function exampleRawFileUrl(path: string): string {
-  return `${exampleRawBaseUrl}/${path}`;
+  return withBasePath(`/rivers-project/${path}`);
 }
 
 function resolveVideo(src: string): string {

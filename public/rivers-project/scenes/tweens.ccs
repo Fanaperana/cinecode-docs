@@ -1,0 +1,42 @@
+// tweens.ccs — a gallery of Godot-style tween presets.
+//
+// Every label slides in over the SAME window, so you can watch the different
+// easing curves race: the slow-start equations lag, the overshoot family
+// (BACK / ELASTIC / BOUNCE) springs past and settles. Pick presets with
+// `ease(EQUATION, MODE)`.
+
+let s = scene("Tween Presets", 170);
+
+s.text("Tween presets — ease(EQUATION, MODE)", 80, 44)
+    .font_size(40)
+    .glow(0.5)
+    .fade_in(0, 16);
+
+// --- Left column: equations, all EASE_OUT, same start/distance -------------
+s.text("equations · EASE_OUT", 96, 120).font_size(24).fade_in(10, 12);
+
+let start = 24;
+let dur = 46;
+let dist = 720;
+
+s.text("QUAD", 150, 168).font_size(30).slide_in("left", dist, start, dur).ease(QUAD, EASE_OUT);
+s.text("CUBIC", 150, 206).font_size(30).slide_in("left", dist, start, dur).ease(CUBIC, EASE_OUT);
+s.text("QUART", 150, 244).font_size(30).slide_in("left", dist, start, dur).ease(QUART, EASE_OUT);
+s.text("EXPO", 150, 282).font_size(30).slide_in("left", dist, start, dur).ease(EXPO, EASE_OUT);
+s.text("CIRC", 150, 320).font_size(30).slide_in("left", dist, start, dur).ease(CIRC, EASE_OUT);
+s.text("BACK", 150, 358).font_size(30).slide_in("left", dist, start, dur).ease(BACK, EASE_OUT);
+s.text("ELASTIC", 150, 396).font_size(30).slide_in("left", dist, start, dur).ease(ELASTIC, EASE_OUT);
+s.text("BOUNCE", 150, 434).font_size(30).slide_in("left", dist, start, dur).ease(BOUNCE, EASE_OUT);
+
+// --- Right column: one equation (QUART) across all four modes --------------
+s.text("QUART · all modes", 720, 120).font_size(24).fade_in(10, 12);
+
+s.text("EASE_IN", 760, 168).font_size(30).slide_in("right", 420, start, dur).ease(QUART, EASE_IN);
+s.text("EASE_OUT", 760, 206).font_size(30).slide_in("right", 420, start, dur).ease(QUART, EASE_OUT);
+s.text("EASE_IN_OUT", 760, 244).font_size(30).slide_in("right", 420, start, dur).ease(QUART, EASE_IN_OUT);
+s.text("EASE_OUT_IN", 760, 282).font_size(30).slide_in("right", 420, start, dur).ease(QUART, EASE_OUT_IN);
+
+// A reusable preset can be stored and applied to many nodes.
+let snappy = ease(BACK, EASE_OUT);
+s.text("let snappy = ease(BACK, EASE_OUT);", 720, 360).font_size(26).slide_in("up", 60, 90, 28).ease(snappy);
+s.text("a.slide_in(...).ease(snappy);", 720, 398).font_size(26).slide_in("up", 60, 100, 28).ease(snappy);

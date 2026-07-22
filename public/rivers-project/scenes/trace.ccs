@@ -1,0 +1,40 @@
+// trace.ccs — SHOWCASE: follow the data, transform tokens. `token_trace` draws
+// an arrow from a value's binding to each use; `morph_token` renames a token in
+// place (an odometer swap). No other programmatic tool understands code this way.
+
+let s = scene("Follow the Data", sec(7));
+s.transition("crossfade", 18);
+
+mark("in", 0);
+mark("typed", after("in", sec(1.6)));
+mark("t1", after("typed", ms(500)));    // trace flow -> line 4
+mark("t2", after("t1", ms(700)));       // trace flow -> line 5
+mark("rename", after("t2", ms(1000)));  // rename a constant in place
+
+s.text("Follow a value through the code", 96, 44)
+    .font_size(40)
+    .glow(0.6)
+    .fade_in(at("in"), ms(500));
+
+let code = s.code(read("src/erosion.rs"), "rust", 150, 150);
+code.font_size(34)
+    .shadow(0.5)
+    .bg(0.08, 0.10, 0.16, 1.0)
+    .rounded(16)
+    .p(26)
+    .border_width(5)
+    .border_left()
+    .border_color(0.4, 0.8, 1.0)
+    .fade_in(at("in"), ms(500))
+    .typewriter(at("in"), sec(1.6));
+
+// Trace `flow` from its binding (line 3) to each place it's used (lines 4, 5).
+s.token_trace(code, 3, "flow", 4, "flow", at("t1"), ms(450));
+s.token_trace(code, 3, "flow", 5, "flow", at("t2"), ms(450));
+
+// Rename the constant in place: EROSION_RATE -> RATE (a visual annotation).
+s.morph_token(code, 4, "EROSION_RATE", "RATE", at("rename"), ms(500));
+
+let cam = s.camera();
+cam.zoom_to(1.08, at("typed"), ms(700));
+cam.zoom_to(1.0, after("rename", sec(1.2)), ms(700));

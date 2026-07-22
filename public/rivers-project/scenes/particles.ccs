@@ -1,0 +1,26 @@
+// particles.ccs — Demo 3: execution flow. A particle stream emits from the code
+// that forwards packets and flows toward the "server", visualizing data moving
+// through the system. The stream is bound to the code via `link`.
+
+let s = scene("Routing Packets", sec(7.33));
+
+s.transition("wipe_down", ms(667)); // reveal sweeping downward
+
+s.text("Routing Packets", 96, 40).font_size(48).glow(0.6).fade_in(0, ms(533));
+
+let code = s.code(read("src/network.rs"), "rust", 96, 150);
+code.font_size(30).shadow(0.5).fade_in(0, ms(533)).typewriter(ms(133), sec(1.87));
+
+// The destination.
+s.text("server", 1060, 350).font_size(40).glow(0.5).fade_in(sec(1.33), ms(533));
+
+// Particle stream from near the forwarding line toward the server.
+let flow = s.particles(640, 300, 1120, 378);
+flow.count(180).spread(36).speed(1.0);
+
+// Bind the `forward(...)` line: spotlight + arrow + stream, synchronized.
+s.link(code, 4, flow, sec(2.33), sec(4.33));
+
+let cam = s.camera();
+cam.zoom_to(1.05, sec(2), sec(1));
+cam.zoom_to(1.0, ms(6667), ms(600));

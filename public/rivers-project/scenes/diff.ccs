@@ -1,0 +1,42 @@
+// diff.ccs — SHOWCASE: watch a refactor. `diff` marks the removed line red and
+// the added line green (gutter stripe + sign), exactly like a code review. The
+// patch only fires once the code has fully typed in.
+
+let s = scene("Watch a Refactor", sec(6));
+s.transition("crossfade", 18);
+
+mark("in", 0);
+mark("typed", after("in", sec(1.6)));     // code fully typed
+mark("remove", after("typed", ms(500)));  // mark the unsafe line removed (red)
+mark("add", after("remove", ms(750)));    // ...then the clamped line added (green)
+
+s.text("Refactor: clamp the erosion", 96, 44)
+    .font_size(40)
+    .glow(0.6)
+    .fade_in(at("in"), ms(500));
+
+// A diff hunk: the unbounded subtraction (line 3, removed) is replaced by a
+// clamped version (line 4, added) so erosion never goes negative.
+let code = s.code(
+    "fn erode(cell: &mut Cell, rain: f32) {\n    let flow = cell.slope() * rain;\n    cell.value -= flow * RATE;\n    cell.value = max(cell.value - flow * RATE, 0.0);\n}",
+    "rust",
+    110,
+    160,
+);
+code.font_size(28)
+    .shadow(0.5)
+    .bg(0.08, 0.10, 0.16, 1.0)
+    .rounded(16)
+    .p(26)
+    .border_width(5)
+    .border_left()
+    .border_color(0.4, 0.8, 1.0)
+    .fade_in(at("in"), ms(500))
+    .typewriter(at("in"), sec(1.6));
+
+s.diff_remove(code, 3, at("remove"), ms(400));
+s.diff_add(code, 4, at("add"), ms(400));
+
+let cam = s.camera();
+cam.zoom_to(1.05, at("typed"), ms(700));
+cam.zoom_to(1.0, after("add", sec(1.4)), ms(700));

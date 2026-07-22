@@ -1,0 +1,30 @@
+# CodeScene project manifest.
+# Run with:  cinecode render examples/rivers-project
+
+# Scene scripts (.ccs), rendered in order. (Root key — must precede tables.)
+scenes = ["scenes/intro.ccs", "scenes/execution.ccs", "scenes/trace.ccs", "scenes/diff.ccs", "scenes/polyglot.ccs", "scenes/terrain.ccs", "scenes/pathfind.ccs", "scenes/particles.ccs", "scenes/graph.ccs", "scenes/life.ccs", "scenes/boids.ccs", "scenes/tweens.ccs", "scenes/inserts.ccs", "scenes/edit.ccs", "scenes/edit_source.ccs", "scenes/editor_theme.ccs", "scenes/font_set.ccs", "scenes/remove_styles.ccs", "scenes/morph.ccs", "scenes/shapes.ccs", "scenes/effects.ccs", "scenes/outro.ccs"]
+
+# Built-in visual theme: sets background, code theme, accent, and text colors.
+theme = "dark_documentary"
+
+[episode]
+title = "How Rivers Form"
+
+[output]
+fps = 30
+width = 1280
+height = 720
+
+# WGSL shader effects (name -> path), run by the GPU backend (`--gpu`).
+# Reference them from scripts: background_shader("aurora"),
+# shader("glitch", x, y, w, h), overlay_shader("scanlines").
+[shaders]
+aurora = "shaders/aurora.wgsl"
+glitch = "shaders/glitch.wgsl"
+scanlines = "shaders/scanlines.wgsl"
+
+# Cross-fade between consecutive scenes (set kind = "cut" for hard cuts).
+[transition]
+kind = "crossfade"
+frames = 18
+

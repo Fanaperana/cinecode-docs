@@ -1,0 +1,36 @@
+// inserts.ccs — entrance + code-insertion animations.
+//
+// slide_in (from any direction), appear, and "shift then slide": push existing
+// code aside and drop a new line into the gap. Each can be tuned with a tween.
+
+let s = scene("Insert Animations", 220);
+
+s.text("Entrances & code insertion", 80, 44)
+    .font_size(40)
+    .glow(0.5)
+    .fade_in(0, 16);
+
+// --- Entrance directions ---------------------------------------------------
+s.text("slide_in(\"left\")", 150, 120).font_size(30)
+    .slide_in("left", 520, 18, 30).ease(QUART, EASE_OUT);
+s.text("slide_in(\"right\")", 150, 162).font_size(30)
+    .slide_in("right", 520, 28, 30).ease(QUART, EASE_OUT);
+s.text("slide_in(\"up\")", 150, 204).font_size(30)
+    .slide_in("up", 70, 38, 28).ease(BACK, EASE_OUT);
+s.text("slide_in(\"down\")", 150, 246).font_size(30)
+    .slide_in("down", 70, 48, 28).ease(BACK, EASE_OUT);
+s.text("appear()  — fade + small rise", 150, 288).font_size(30)
+    .appear(58, 26).ease(QUART, EASE_OUT);
+
+// --- "Shift then slide": insert a line into existing code -------------------
+s.text("shift() + slide_in()  →  insert a line", 150, 360).font_size(26).fade_in(80, 14);
+
+let code = s.code(read("src/erosion.rs"), "rust", 110, 410);
+code.font_size(26).shadow(0.5).fade_in(92, 16).typewriter(96, 56);
+
+// The new line "inserted" above the block. At frame 165 the whole code block
+// shifts down to open a gap, and the new comment slides down into it.
+let ins = s.text("    // inserted: clamp erosion", 130, 410).font_size(24).glow(0.4);
+
+code.shift(0, 56, 165, 18).ease(CUBIC, EASE_OUT);
+ins.slide_in("down", 56, 165, 18).ease(QUART, EASE_OUT);

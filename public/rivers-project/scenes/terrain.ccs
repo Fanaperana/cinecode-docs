@@ -1,0 +1,28 @@
+// terrain.ccs — Demo 1: a Perlin/fBm noise heightmap bound to the code that
+// "generates" it. Proves the PRD loop: code line highlight → simulation
+// reveals → camera moves, all on one synchronized timeline.
+
+let s = scene("Generating Terrain", sec(7.33));
+
+s.transition("wipe_right", ms(667)); // hard-edged reveal sweeping right
+
+s.text("Generating Terrain", 96, 40).font_size(48).glow(0.6).fade_in(0, ms(533));
+
+// The code that conceptually produces the heightmap.
+let code = s.code(read("src/terrain.rs"), "rust", 96, 150);
+code.font_size(34).shadow(0.5).fade_in(0, ms(533)).typewriter(ms(133), sec(1.6));
+
+// The noise-field simulation (rendered as a terrain heightmap).
+let terrain = s.terrain(700, 120, 480, 480);
+terrain.seed(7).octaves(6).cells(120, 120).mode("heightmap");
+
+// Bind line 1 (`height = noise(x, y)`) to the terrain: spotlight the line, draw
+// an arrow to the simulation, and reveal it — all over the same window.
+s.link(code, 1, terrain, sec(2.33), sec(2.33));
+
+// Camera pushes in on the forming terrain, then pulls back.
+let cam = s.camera();
+cam.move_to(940, 360, sec(5), sec(1.33));
+cam.zoom_to(1.25, sec(5), sec(1.33));
+cam.move_to(640, 360, ms(6833), ms(500));
+cam.zoom_to(1, ms(6833), ms(500));

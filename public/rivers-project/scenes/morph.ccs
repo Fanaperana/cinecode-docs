@@ -1,0 +1,46 @@
+// morph.ccs — morph one word into another (a cross-transition "update").
+//
+// A code/text node's content is fixed, so a word→word morph is two nodes at the
+// SAME position: `morph(old, new, style, start, dur)` exits `old` while it
+// brings `new` in over the same window. Styles: "blur" | "scale" | "roll" |
+// "fade". Both nodes must share the same x/y.
+
+let s = scene("Word Morph", 230);
+
+s.text("morph(old, new, style, start, dur)", 96, 40).font_size(32).glow(0.5).fade_in(0, 14);
+
+// --- Hero: a sequence of morphs on one spot: idea → draft → ship ------------
+let hx = 470; let hy = 110;
+let h1 = s.text("idea", hx, hy).font("Georgia").font_size(76).glow(0.5);
+let h2 = s.text("draft", hx, hy).font("Georgia").font_size(76).glow(0.5);
+let h3 = s.text("ship", hx, hy).font("Georgia").font_size(76).glow(0.5);
+h1.fade_in(0, 12);
+s.morph(h1, h2, "blur", 30, 24).ease(QUART, EASE_OUT);   // idea → draft (eased blur)
+s.morph(h2, h3, "scale", 74, 24).ease(BACK, EASE_OUT);   // draft → ship (bouncy scale)
+
+// --- Gallery: each style morphs word A → word B at the same position --------
+let lx = 130; let wx = 480; let fz = 38;
+
+s.text("fade", lx, 290).font_size(24).fade_in(120, 10);
+let a1 = s.text("before", wx, 286).font_size(fz);
+let b1 = s.text("after", wx, 286).font_size(fz);
+a1.fade_in(118, 10);
+s.morph(a1, b1, "fade", 150, 26);
+
+s.text("blur", lx, 350).font_size(24).fade_in(124, 10);
+let a2 = s.text("DRAFT", wx, 346).font_size(fz);
+let b2 = s.text("FINAL", wx, 346).font_size(fz);
+a2.fade_in(122, 10);
+s.morph(a2, b2, "blur", 150, 26);
+
+s.text("scale", lx, 410).font_size(24).fade_in(128, 10);
+let a3 = s.text("tiny", wx, 406).font_size(fz);
+let b3 = s.text("HUGE", wx, 406).font_size(fz);
+a3.fade_in(126, 10);
+s.morph(a3, b3, "scale", 150, 26);
+
+s.text("roll", lx, 470).font_size(24).fade_in(132, 10);
+let a4 = s.text("v1.2", wx, 466).font_size(fz);
+let b4 = s.text("v1.3", wx, 466).font_size(fz);
+a4.fade_in(130, 10);
+s.morph(a4, b4, "roll", 150, 26).ease(BACK, EASE_OUT);    // odometer roll, eased with a tween

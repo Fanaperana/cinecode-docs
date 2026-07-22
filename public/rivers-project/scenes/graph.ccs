@@ -1,0 +1,26 @@
+// graph.ccs — Demo 4: graph traversal. A breadth-first search spreads outward
+// from the start node, layer by layer, bound to the code that runs it. Tree
+// edges and visited nodes light up as the frontier expands.
+
+let s = scene("Graph Traversal", sec(7.33));
+
+s.transition("slide_up", ms(733)); // push upward
+
+s.text("Breadth-First Search", 96, 40).font_size(46).glow(0.6).fade_in(0, ms(533));
+
+let code = s.code(read("src/bfs.rs"), "rust", 96, 150);
+code.font_size(28).shadow(0.5).fade_in(0, ms(533)).typewriter(ms(133), sec(2.13));
+
+// The graph (BFS from the green start node).
+let g = s.graph(720, 110, 480, 480);
+g.seed(11).nodes(36).algorithm("bfs");
+
+// Bind the dequeue/explore loop: spotlight + arrow + traversal reveal.
+s.link(code, 3, g, sec(2.67), sec(4.33));
+
+// Camera follows the spreading search, then pulls back.
+let cam = s.camera();
+cam.move_to(960, 360, sec(5), sec(1.2));
+cam.zoom_to(1.2, sec(5), sec(1.2));
+cam.move_to(640, 360, ms(6800), ms(467));
+cam.zoom_to(1, ms(6800), ms(467));

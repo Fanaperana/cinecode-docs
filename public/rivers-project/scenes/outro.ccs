@@ -1,0 +1,22 @@
+// outro.ccs — closing card. Bookends the documentary with the CineCode pitch.
+
+let s = scene("Outro", 140);
+s.bg(0.05, 0.06, 0.09);
+
+s.text("CineCode", 96, 270)
+    .font_size(76)
+    .glow(0.85)
+    .fade_in(0, 22)
+    .slide_up(40, 0, 26);
+s.text("the programming documentary engine", 100, 372)
+    .font_size(28)
+    .opacity(0.85)
+    .fade_in(16, 22);
+s.text("code · timeline · simulation · camera · native render", 100, 432)
+    .font_size(22)
+    .opacity(0.6)
+    .fade_in(28, 22);
+
+// Slow, gentle push-in for a confident finish.
+let cam = s.camera();
+cam.zoom_to(1.06, 0, 130);

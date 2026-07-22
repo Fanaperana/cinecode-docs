@@ -1,0 +1,47 @@
+// execution.ccs — SHOWCASE: watch your code execute. `execution_flow` steps a
+// cursor through the erosion loop like a debugger, while `variable_update`
+// badges track the value as it changes. Timing is driven by named markers.
+
+let s = scene("Watch It Run", sec(7));
+s.transition("crossfade", 18);
+
+mark("in", 0);
+mark("typed", after("in", sec(1.6)));   // code fully typed
+mark("run", after("typed", ms(400)));   // execution begins
+
+s.text("Watch your code execute", 96, 44)
+    .font_size(40)
+    .glow(0.6)
+    .fade_in(at("in"), ms(500));
+
+let code = s.code(read("src/erosion.rs"), "rust", 120, 150);
+code.font_size(30)
+    .shadow(0.5)
+    .bg(0.08, 0.10, 0.16, 0.96)
+    .rounded(16)
+    .p(26)
+    .border_width(5)
+    .border_left()
+    .border_color(0.4, 0.8, 1.0)
+    .fade_in(at("in"), ms(500))
+    .typewriter(at("in"), sec(1.6));
+
+// Step the cursor through the loop body twice, then out — control flow made
+// visible (line 2 is the `for`, 3-5 the body, repeated, then 6-7 exit).
+code.execution_flow([1, 2, 3, 4, 5, 2, 3, 4, 5, 6, 7], at("run"), ms(360));
+
+// Value badges track `flow` on line 3 as the loop runs (each fades out as the
+// next appears).
+let v1 = s.variable_update(code, 3, "flow = 0.42", after("run", ms(800)), ms(250));
+v1.dissolve(after("run", ms(2300)), ms(200));
+let v2 = s.variable_update(code, 3, "flow = 0.31", after("run", ms(2400)), ms(250));
+v2.dissolve(after("run", ms(3600)), ms(200));
+s.variable_update(code, 3, "flow = 0.18", after("run", ms(3700)), ms(250));
+
+code.unfocus(after("run", sec(4.2)), ms(400));
+
+// Gentle documentary push-in on the code while it runs, then pull back. Kept
+// modest so the value badges on the right stay in frame.
+let cam = s.camera();
+cam.zoom_to(1.06, at("typed"), ms(700));
+cam.zoom_to(1.0, after("run", sec(4.0)), ms(700));

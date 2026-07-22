@@ -1,0 +1,42 @@
+// intro.ccs — the "Introduction" scene. A glowing hero title over a styled
+// callout panel, the erosion source typed in, then a documentary push-in.
+
+let s = scene("Introduction", 200);
+s.transition("fade_color", 22);
+
+// Hero title with a soft glow.
+s.text("How Rivers Form", 96, 44).font_size(58).glow(0.7).fade_in(0, 20);
+s.text("a programming documentary", 100, 116)
+    .font_size(24)
+    .opacity(0.7)
+    .fade_in(10, 18);
+
+// Code inside a styled callout: rounded panel, drop shadow, accent left bar.
+let code = s.code(read("src/erosion.rs"), "rust", 150, 180);
+code.font_size(36)
+    .shadow(0.6)
+    .bg(0.08, 0.10, 0.16, 0.96)
+    .rounded(18)
+    .p(28)
+    .border_width(5)
+    .border_left()
+    .border_color(0.4, 0.8, 1.0)
+    .fade_in(0, 18)
+    .slide_up(48, 0, 24)
+    .typewriter(6, 84);
+
+// Spotlight the erosion line: rounded highlight bar + dim the other lines.
+code.highlight(4, 96, 20).rounded(8);
+code.spotlight(4, 0.65, 96, 20);
+
+// Educational overlays: underline the erosion line and point an arrow at it.
+s.underline(code, 4, 110, 12);
+s.point_at(code, 4, 1120, 560, 120, 12).dissolve(170, 20);
+
+// Documentary camera: push in on line 4, hold, then pull back while the
+// spotlight releases.
+let cam = s.camera();
+cam.focus_on(code, 96, 24, 1.5, 4);
+cam.move_to(640, 360, 168, 28);
+cam.zoom_to(1, 168, 28);
+code.unfocus(168, 28);

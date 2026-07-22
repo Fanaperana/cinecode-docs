@@ -1,0 +1,26 @@
+// life.ccs — Cellular automata: Conway's Game of Life. The `reveal` drives the
+// generation number, so the board *evolves over time* — births flash green,
+// deaths fade red — straight from the two-line rule highlighted in the code.
+
+let s = scene("Game of Life", sec(8));
+
+s.transition("fade_color", ms(667), 1.0, 1.0, 1.0); // dip through white
+
+s.text("Conway's Game of Life", 96, 40).font_size(44).glow(0.6).fade_in(0, ms(533));
+
+let code = s.code(read("src/life.rs"), "rust", 96, 150);
+code.font_size(28).shadow(0.5).fade_in(0, ms(533)).typewriter(ms(133), sec(2.13));
+
+// The automaton (B3/S23) running over 40 generations.
+let life = s.life(700, 110, 500, 500);
+life.seed(3).cells(64, 64).density(0.34).generations(40).rule("B3/S23");
+
+// Bind the rule line: spotlight + arrow + run the automaton.
+s.link(code, 5, life, sec(2.67), sec(5));
+
+// Camera pushes in on the emerging patterns, then pulls back.
+let cam = s.camera();
+cam.move_to(950, 360, sec(5), sec(1.2));
+cam.zoom_to(1.15, sec(5), sec(1.2));
+cam.move_to(640, 360, ms(7467), ms(467));
+cam.zoom_to(1, ms(7467), ms(467));

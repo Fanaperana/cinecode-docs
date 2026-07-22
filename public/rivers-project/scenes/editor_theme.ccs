@@ -1,0 +1,63 @@
+// editor_theme.ccs — cycle through every built-in code highlight theme.
+//
+// `code(source, lang, THEME, x, y)` accepts a syntect theme name. This scene
+// shows the same snippet (read from src/editor_theme.rs) under each of the 7
+// built-in themes in turn, on a matching backdrop `panel` so light themes stay
+// readable. List the names any time with:  cinecode themes
+
+let s = scene("Highlight Themes", 320);
+
+s.text("Highlight themes — code(src, lang, theme, x, y)", 96, 44)
+    .font_size(34).glow(0.5).fade_in(0, 16);
+
+let src = read("src/editor_theme.rs");
+
+// Panel + code geometry (shared by every theme).
+let px = 200; let py = 150; let pw = 880; let ph = 392;
+let cx = 232; let cy = 170;
+let win = 42;   // frames each theme is on screen
+
+// One [panel, code, label] trio per theme, sequenced so only one shows at a
+// time. Each theme gets a backdrop tinted like that theme's own background.
+
+// 0 — base16-ocean.dark (the project default)
+let a = 16;
+s.panel(px, py, pw, ph, 0.16, 0.18, 0.22).fade_in(a, 8).dissolve(a + win - 10, 8);
+s.code(src, "rust", "base16-ocean.dark", cx, cy).font_size(24).fade_in(a, 10).dissolve(a + win - 10, 8);
+s.text("base16-ocean.dark  (default)", 200, 108).font_size(26).fade_in(a, 8).dissolve(a + win - 10, 8);
+
+// 1 — base16-eighties.dark
+let a = 58;
+s.panel(px, py, pw, ph, 0.18, 0.18, 0.18).fade_in(a, 8).dissolve(a + win - 10, 8);
+s.code(src, "rust", "base16-eighties.dark", cx, cy).font_size(24).fade_in(a, 10).dissolve(a + win - 10, 8);
+s.text("base16-eighties.dark", 200, 108).font_size(26).fade_in(a, 8).dissolve(a + win - 10, 8);
+
+// 2 — base16-mocha.dark
+let a = 100;
+s.panel(px, py, pw, ph, 0.20, 0.18, 0.16).fade_in(a, 8).dissolve(a + win - 10, 8);
+s.code(src, "rust", "base16-mocha.dark", cx, cy).font_size(24).fade_in(a, 10).dissolve(a + win - 10, 8);
+s.text("base16-mocha.dark", 200, 108).font_size(26).fade_in(a, 8).dissolve(a + win - 10, 8);
+
+// 3 — Solarized (dark)
+let a = 142;
+s.panel(px, py, pw, ph, 0.00, 0.17, 0.21).fade_in(a, 8).dissolve(a + win - 10, 8);
+s.code(src, "rust", "Solarized (dark)", cx, cy).font_size(24).fade_in(a, 10).dissolve(a + win - 10, 8);
+s.text("Solarized (dark)", 200, 108).font_size(26).fade_in(a, 8).dissolve(a + win - 10, 8);
+
+// 4 — base16-ocean.light
+let a = 184;
+s.panel(px, py, pw, ph, 0.93, 0.94, 0.96).fade_in(a, 8).dissolve(a + win - 10, 8);
+s.code(src, "rust", "base16-ocean.light", cx, cy).font_size(24).fade_in(a, 10).dissolve(a + win - 10, 8);
+s.text("base16-ocean.light", 200, 108).font_size(26).fade_in(a, 8).dissolve(a + win - 10, 8);
+
+// 5 — Solarized (light)
+let a = 226;
+s.panel(px, py, pw, ph, 0.99, 0.96, 0.89).fade_in(a, 8).dissolve(a + win - 10, 8);
+s.code(src, "rust", "Solarized (light)", cx, cy).font_size(24).fade_in(a, 10).dissolve(a + win - 10, 8);
+s.text("Solarized (light)", 200, 108).font_size(26).fade_in(a, 8).dissolve(a + win - 10, 8);
+
+// 6 — InspiredGitHub (light)
+let a = 268;
+s.panel(px, py, pw, ph, 1.00, 1.00, 1.00).fade_in(a, 8).dissolve(a + win - 10, 8);
+s.code(src, "rust", "InspiredGitHub", cx, cy).font_size(24).fade_in(a, 10).dissolve(a + win - 10, 8);
+s.text("InspiredGitHub", 200, 108).font_size(26).fade_in(a, 8).dissolve(a + win - 10, 8);

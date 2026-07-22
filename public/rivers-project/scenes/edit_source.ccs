@@ -1,0 +1,100 @@
+// edit_source.ccs — a second live-edit walkthrough, written as a teaching
+// example. We read a REAL file (src/edit_source.rs), lay it out one code node
+// per line, then: focus a line, INSERT a guard clause, and UPDATE the division
+// to be safe — using fade/scale/color/slide/typewriter + tween presets.
+//
+// Render (CPU is fine; no shaders here):
+//   cinecode render examples/rivers-project -o out/rivers.mp4
+
+let s = scene("Refactor: guard a divide", 320);
+
+// --- Title -----------------------------------------------------------------
+let title = s.text("Refactor: make normalize() safe", 96, 44).font_size(40).glow(0.5);
+title.fade_in(0, 16);
+title.color_to(1.0, 0.85, 0.30, 26, 18);    // flash to the accent color...
+title.color_to(0.92, 0.92, 0.95, 70, 22);   // ...then settle back
+
+// --- 1) Read the file and lay out one code node per line -------------------
+// `read` returns the file text; `.split("\n")` gives an array of lines, so we
+// can animate individual lines independently.
+let lines = read("src/edit_source.rs").split("\n");
+let x = 150;
+let top = 180;
+let lh = 44;
+
+let l0 = s.code(lines[0], "rust", x, top + 0 * lh).font_size(30); // fn normalize(...) {
+let l1 = s.code(lines[1], "rust", x, top + 1 * lh).font_size(30); //     let max = peak(values);
+let l2 = s.code(lines[2], "rust", x, top + 2 * lh).font_size(30); //     for v in values.iter_mut() {
+let l3 = s.code(lines[3], "rust", x, top + 3 * lh).font_size(30); //         *v = *v / max;
+let l4 = s.code(lines[4], "rust", x, top + 4 * lh).font_size(30); //     }
+let l5 = s.code(lines[5], "rust", x, top + 5 * lh).font_size(30); // }
+
+// Type each line in, staggered, so it reads like it's being written.
+l0.fade_in(0, 10).typewriter(0, 16);
+l1.fade_in(4, 10).typewriter(4, 16);
+l2.fade_in(8, 10).typewriter(8, 16);
+l3.fade_in(12, 10).typewriter(12, 16);
+l4.fade_in(16, 10).typewriter(16, 16);
+l5.fade_in(20, 10).typewriter(20, 16);
+
+// --- 2) Focus the risky line (dim the rest, pop the target) ----------------
+// With one node per line we "dim others" by fading them with `fade_to`, and
+// emphasize the target with `scale_to` + an underline.
+let capA = s.text("`max` could be 0 → divide error", 150, 132).font_size(26);
+capA.slide_in("right", 240, 58, 22).ease(QUART, EASE_OUT);
+capA.color_to(1.0, 0.85, 0.30, 62, 14);
+
+l0.fade_to(0.4, 62, 14);
+l2.fade_to(0.4, 62, 14);
+l3.fade_to(0.4, 62, 14);
+l4.fade_to(0.4, 62, 14);
+l5.fade_to(0.4, 62, 14);
+l1.scale_to(1.06, 62, 14);            // the `let max = ...` line pops
+let u1 = s.underline(l1, 1, 64, 12);  // underline it
+
+// Restore everyone at frame ~104.
+l0.fade_to(1.0, 104, 14);
+l2.fade_to(1.0, 104, 14);
+l3.fade_to(1.0, 104, 14);
+l4.fade_to(1.0, 104, 14);
+l5.fade_to(1.0, 104, 14);
+l1.scale_to(1.0, 104, 14);
+u1.dissolve(104, 12);
+capA.dissolve(104, 16);
+
+// --- 3) INSERT a guard clause after `let max = ...` ------------------------
+// Open a gap by shifting everything below down by one line, then slide + type
+// the new line into the gap.
+let capB = s.text("insert a guard clause", 150, 132).font_size(26);
+capB.slide_in("right", 240, 120, 22).ease(QUART, EASE_OUT);
+capB.color_to(0.45, 0.92, 0.62, 124, 14);
+
+l2.shift(0, lh, 130, 16).ease(CUBIC, EASE_OUT);
+l3.shift(0, lh, 130, 16).ease(CUBIC, EASE_OUT);
+l4.shift(0, lh, 130, 16).ease(CUBIC, EASE_OUT);
+l5.shift(0, lh, 130, 16).ease(CUBIC, EASE_OUT);
+
+let guard = s.code("    if max == 0.0 { return; }", "rust", x, top + 2 * lh).font_size(30);
+guard.slide_in("down", lh, 130, 16).ease(QUART, EASE_OUT)  // drop into the gap
+     .typewriter(140, 18)
+     .scale_to(1.10, 140, 12)                              // pop...
+     .scale_to(1.0, 158, 12);                              // ...and settle
+capB.dissolve(185, 16);
+
+// --- 4) UPDATE the division to clamp the result ----------------------------
+// The division line is now one row lower (it was shifted in step 3). Fade the
+// old line out while the new, hardened line types in.
+let capC = s.text("clamp the result too", 150, 132).font_size(26);
+capC.slide_in("right", 240, 196, 22).ease(QUART, EASE_OUT);
+capC.color_to(1.0, 0.85, 0.30, 200, 14);
+
+l3.fade_to(0.0, 210, 14).scale_to(0.7, 210, 14);          // old `*v = *v / max;`
+// It now sits one row lower (shifted in step 3), so place the new line there.
+let upd = s.code("        *v = (*v / max).clamp(0.0, 1.0);", "rust", x, top + 4 * lh).font_size(30);
+upd.fade_in(212, 12).typewriter(214, 22).pulse(0.12, 240, 14);
+capC.dissolve(264, 16);
+
+// --- 5) Done ---------------------------------------------------------------
+let done = s.text("✓ normalize() is safe", 700, 402).font_size(28).glow(0.5);
+done.appear(276, 22).ease(BACK, EASE_OUT);
+done.color_to(0.45, 0.92, 0.62, 280, 16);

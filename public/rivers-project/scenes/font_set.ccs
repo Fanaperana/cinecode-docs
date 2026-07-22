@@ -1,0 +1,48 @@
+// font_set.ccs — set your own fonts on text nodes.
+//
+// `text(...).font("Family")` renders that text in any font installed on the
+// system (or one loaded via the manifest `fonts` list). Code stays monospace;
+// fonts apply to text/titles. Labels here are in the default monospace; the
+// samples beside them use the named font.
+
+let s = scene("Custom Fonts", 230);
+
+s.text("text(...).font(\"Family\")", 96, 38).font_size(30).fade_in(0, 14);
+
+// A hero title in a typewriter font — set your title to whatever you like.
+s.text("Your Title, Your Font", 96, 92).font("American Typewriter").font_size(60).glow(0.5)
+    .slide_in("up", 50, 6, 22).ease(BACK, EASE_OUT);
+
+// A gallery: the same sample rendered in several system fonts, each labeled
+// (the label is in the default monospace so you can compare).
+let lx = 110;   // label x
+let sx = 470;   // sample x
+let sample = "The quick brown fox 0123";
+
+s.text("Georgia", lx, 196).font_size(22).fade_in(22, 10);
+s.text(sample, sx, 190).font("Georgia").font_size(34)
+    .slide_in("left", 90, 22, 16).ease(QUART, EASE_OUT);
+
+s.text("Helvetica", lx, 262).font_size(22).fade_in(28, 10);
+s.text(sample, sx, 256).font("Helvetica").font_size(34)
+    .slide_in("left", 90, 28, 16).ease(QUART, EASE_OUT);
+
+s.text("Courier New", lx, 328).font_size(22).fade_in(34, 10);
+s.text(sample, sx, 322).font("Courier New").font_size(34)
+    .slide_in("left", 90, 34, 16).ease(QUART, EASE_OUT);
+
+s.text("American Typewriter", lx, 394).font_size(22).fade_in(40, 10);
+s.text(sample, sx, 388).font("American Typewriter").font_size(34)
+    .slide_in("left", 90, 40, 16).ease(QUART, EASE_OUT);
+
+s.text("Papyrus", lx, 460).font_size(22).fade_in(46, 10);
+s.text(sample, sx, 454).font("Papyrus").font_size(34)
+    .slide_in("left", 90, 46, 16).ease(QUART, EASE_OUT);
+
+s.text("Futura", lx, 526).font_size(22).fade_in(52, 10);
+s.text(sample, sx, 520).font("Futura").font_size(34)
+    .slide_in("left", 90, 52, 16).ease(QUART, EASE_OUT);
+
+// An unknown font name simply falls back to the default — no crash.
+s.text("(unknown names fall back to the default font)", 110, 600)
+    .font_size(20).fade_in(70, 14);

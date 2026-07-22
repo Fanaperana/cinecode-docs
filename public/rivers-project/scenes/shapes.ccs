@@ -1,0 +1,76 @@
+// shapes.ccs — a showcase of vector shapes, paths, and image/SVG import.
+// Everything here renders on the CPU backend (no --gpu needed).
+
+let s = scene("Shapes & Images", 240);
+
+s.text("Vector Shapes, Paths & Images", 96, 44)
+    .font_size(48)
+    .glow(0.5)
+    .slide_in("up", 60, 0, 24)
+    .ease(BACK, EASE_OUT);
+
+// --- Row 1: filled primitives ---------------------------------------------
+
+// Rounded, filled rectangle with a solid white border.
+s.rect(120, 170, 190, 120)
+    .fill(0.16, 0.40, 0.85)
+    .stroke(1, 1, 1)
+    .stroke_width(3)
+    .radius(22)
+    .fade_in(0, 16);
+s.text("rounded rect", 120, 300).font_size(22).fade_in(10, 12);
+
+// Circle.
+s.circle(470, 230, 62).fill(0.20, 0.78, 0.50).grow_in(8, 18);
+s.text("circle", 410, 300).font_size(22).fade_in(16, 12);
+
+// Ellipse with a dotted accent outline (no fill).
+s.ellipse(700, 230, 95, 58)
+    .no_fill()
+    .stroke(1, 0.82, 0.20)
+    .stroke_width(5)
+    .dotted()
+    .fade_in(20, 16);
+s.text("ellipse (dotted)", 610, 300).font_size(22).fade_in(28, 12);
+
+// Triangle (a closed polygon).
+s.polygon([[860, 290], [1010, 290], [935, 175]])
+    .fill(0.75, 0.30, 0.92)
+    .fade_in(28, 16);
+s.text("polygon", 890, 300).font_size(22).fade_in(36, 12);
+
+// --- Row 2: outlines, a computed star, and an open path -------------------
+
+// Dashed rounded outline.
+s.rect(120, 380, 190, 120)
+    .no_fill()
+    .stroke(0.95, 0.45, 0.25)
+    .stroke_width(4)
+    .radius(14)
+    .dashed()
+    .fade_in(24, 16);
+s.text("dashed border", 120, 510).font_size(22).fade_in(34, 12);
+
+// A 5-point star, built with a loop — paths can be any shape.
+let star = [];
+let cx = 470;
+let cy = 440;
+for i in 0..10 {
+    let ang = -1.5708 + i * 0.62832;          // start at top, step 36°
+    let r = if i % 2 == 0 { 64.0 } else { 26.0 };
+    star.push([cx + r * cos(ang), cy + r * sin(ang)]);
+}
+s.polygon(star).fill(0.98, 0.75, 0.22).grow_in(30, 20);
+s.text("star (computed)", 400, 520).font_size(22).fade_in(40, 12);
+
+// An open, stroked zig-zag path.
+s.path([[610, 380], [670, 500], [730, 380], [790, 500], [850, 380]])
+    .stroke(0.20, 0.90, 0.90)
+    .stroke_width(5)
+    .fade_in(34, 16);
+s.text("open path", 690, 510).font_size(22).fade_in(44, 12);
+
+// --- Imported SVG ---------------------------------------------------------
+
+s.image("assets/logo.svg", 1010, 360, 200, 200).grow_in(10, 24);
+s.text("image (SVG)", 1040, 575).font_size(22).fade_in(30, 12);

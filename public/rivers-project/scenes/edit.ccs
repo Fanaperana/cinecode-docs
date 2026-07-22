@@ -1,0 +1,60 @@
+// edit.ccs — a live code-edit demo. We read a REAL file (src/step.rs), lay it
+// out one code node per line, then animate an update, an insert, and a remove —
+// driving color, opacity, and scale animations along the way.
+
+let s = scene("Live Code Edit", 330);
+
+// Title that pulses to the accent color and back (a `color_to` on text).
+let title = s.text("Live edit: update · insert · remove", 96, 44).font_size(40).glow(0.5);
+title.fade_in(0, 16);
+title.color_to(1.0, 0.85, 0.30, 26, 18);   // → accent
+title.color_to(0.92, 0.92, 0.95, 70, 22);  // → back
+
+// Read the real source file and split it into lines.
+let lines = read("src/step.rs").split("\n");
+let x = 170;
+let top = 175;
+let lh = 46;
+
+// One code node per line, typed in (staggered).
+let l1 = s.code(lines[0], "rust", x, top + 0 * lh).font_size(30);
+let l2 = s.code(lines[1], "rust", x, top + 1 * lh).font_size(30);
+let l3 = s.code(lines[2], "rust", x, top + 2 * lh).font_size(30);
+let l4 = s.code(lines[3], "rust", x, top + 3 * lh).font_size(30);
+let l5 = s.code(lines[4], "rust", x, top + 4 * lh).font_size(30);
+l1.fade_in(0, 10).typewriter(0, 18);
+l2.fade_in(4, 10).typewriter(4, 18);
+l3.fade_in(8, 10).typewriter(8, 18);
+l4.fade_in(12, 10).typewriter(12, 18);
+l5.fade_in(16, 10).typewriter(16, 18);
+
+// ① UPDATE — change the value on line 2 (opacity + scale).
+let capU = s.text("1. update a value", 720, 220).font_size(26);
+capU.slide_in("right", 240, 64, 22).ease(QUART, EASE_OUT);
+capU.color_to(1.0, 0.85, 0.30, 68, 14);          // color animation on the caption
+l2.fade_to(0.0, 84, 14).scale_to(0.70, 84, 14);  // old line shrinks + fades out
+let l2b = s.code("    let rain = 0.35;", "rust", x, top + 1 * lh).font_size(30);
+l2b.fade_in(86, 12).typewriter(88, 18).pulse(0.14, 108, 16); // new chars type in + pop
+capU.dissolve(130, 16);
+
+// ② INSERT — open a gap and slide a new line into it (shift + slide_in).
+let capI = s.text("2. insert a line", 720, 268).font_size(26);
+capI.slide_in("right", 240, 140, 22).ease(QUART, EASE_OUT);
+capI.color_to(0.45, 0.92, 0.62, 144, 14);
+l3.shift(0, lh, 150, 16).ease(CUBIC, EASE_OUT);  // lines below shift down...
+l4.shift(0, lh, 150, 16).ease(CUBIC, EASE_OUT);
+l5.shift(0, lh, 150, 16).ease(CUBIC, EASE_OUT);
+let ins = s.code("    clamp(grid);", "rust", x, top + 2 * lh).font_size(30);
+ins.slide_in("down", lh, 150, 16).ease(QUART, EASE_OUT) // ...new line drops into the gap
+   .typewriter(160, 16)
+   .scale_to(1.10, 160, 12)                              // emphasize, then settle
+   .scale_to(1.0, 176, 12);
+capI.dissolve(210, 16);
+
+// ③ REMOVE — fade + scale the line away, then close the gap.
+let capR = s.text("3. remove a line", 720, 316).font_size(26);
+capR.slide_in("right", 240, 218, 22).ease(QUART, EASE_OUT);
+capR.color_to(1.0, 0.42, 0.42, 222, 14);
+l4.fade_to(0.0, 230, 18).scale_to(0.35, 230, 18);  // opacity + scale to nothing
+l5.shift(0, 0, 252, 18).ease(CUBIC, EASE_OUT);     // line below rises to close the gap
+capR.dissolve(296, 16);
